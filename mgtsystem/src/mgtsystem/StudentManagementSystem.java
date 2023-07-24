@@ -12,9 +12,9 @@ public class StudentManagementSystem extends JFrame {
     private JButton registerButton;
     private JComboBox<String> userTypeComboBox;
     private Connection connection;
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/studentms";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "hello";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/student_ms";
+    private static final String DB_USER = "ashley";
+    private static final String DB_PASSWORD = "ash00ley";
 
     public StudentManagementSystem() {
         super("Student Management System");
@@ -85,7 +85,7 @@ public class StudentManagementSystem extends JFrame {
     private void connectToDatabase() {
         try {
             // Load the MySQL JDBC driver
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             
             // Establish the connection
             connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -131,32 +131,42 @@ public class StudentManagementSystem extends JFrame {
 
 
     // Method to handle registration functionality
-    private void register() {
-        String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
-        String userType = (String) userTypeComboBox.getSelectedItem(); // Get the selected user type from the JComboBox
+ // Method to handle registration functionality
+private void register() {
+    String username = usernameField.getText();
+    String password = new String(passwordField.getPassword());
+    String userType = (String) userTypeComboBox.getSelectedItem(); // Get the selected user type from the JComboBox
 
-        try {
-            String query = "INSERT INTO users (username, password, userType) VALUES (?, ?, ?)";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, username);
-            statement.setString(2, password);
-            statement.setString(3, userType); // Use the selected user type
+    try {
+        String query = "INSERT INTO users (username, password, userType) VALUES (?, ?, ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, username);
+        statement.setString(2, password);
+        statement.setString(3, userType); // Use the selected user type
 
-            int rowsInserted = statement.executeUpdate();
+        int rowsInserted = statement.executeUpdate();
 
-            if (rowsInserted > 0) {
-                JOptionPane.showMessageDialog(this, "Registration successful. You can now login.");
-            } else {
-                JOptionPane.showMessageDialog(this, "Registration failed. Please try again.");
-            }
-            statement.close();
-        } catch (SQLException e) {
-            // Handle duplicate username, etc.
-            JOptionPane.showMessageDialog(this, "Registration failed. Please try a different username.");
-            e.printStackTrace();
+        if (rowsInserted > 0) {
+            JOptionPane.showMessageDialog(this, "Registration successful. You can now login.");
+
+            // Open the StudentRegistrationFrame after successful registration
+            StudentRegistrationFrame registrationFrame = new StudentRegistrationFrame(username);
+            registrationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            registrationFrame.setSize(400, 400);
+            registrationFrame.setVisible(true);
+
+            // Close the current registration frame
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Registration failed. Please try again.");
         }
+        statement.close();
+    } catch (SQLException e) {
+        // Handle duplicate username, etc.
+        JOptionPane.showMessageDialog(this, "Registration failed. Please try a different username.");
+        e.printStackTrace();
     }
+}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
