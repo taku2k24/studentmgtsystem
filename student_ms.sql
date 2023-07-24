@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 24, 2023 at 07:37 AM
+-- Generation Time: Jul 24, 2023 at 12:18 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -20,6 +20,38 @@ SET time_zone = "+00:00";
 --
 -- Database: `student_ms`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courses`
+--
+
+CREATE TABLE `courses` (
+  `course_id` int(11) NOT NULL,
+  `course_code` varchar(10) NOT NULL,
+  `course_name` varchar(120) NOT NULL,
+  `course_duration` varchar(50) NOT NULL,
+  `status` enum('active','archived') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `courses`
+--
+
+INSERT INTO `courses` (`course_id`, `course_code`, `course_name`, `course_duration`, `status`) VALUES
+(1, 'CS101', 'Introduction to Computer Science', '4', 'active'),
+(2, 'ENG202', 'Advanced English Literature', '3', 'active'),
+(3, 'MATH301', 'Advanced Mathematics', '4', 'active'),
+(4, 'BUS101', 'Introduction to Business Administration', '3', 'active'),
+(5, 'SCI201', 'General Science', '4', 'active'),
+(6, 'PHYSICS401', 'Quantum Physics', '3', 'active'),
+(7, 'CHEM202', 'Organic Chemistry', '4', 'active'),
+(8, 'HIST101', 'World History', '3', 'active'),
+(9, 'ARTS301', 'Fine Arts and Painting', '4', 'active'),
+(10, 'PSYCH101', 'Introduction to Psychology', '3', 'active'),
+(11, 'SOCIOLOGY2', 'Sociology and Human Behavior', '4', 'active'),
+(12, 'ECONOMICS3', 'Principles of Economics', '3', 'active');
 
 -- --------------------------------------------------------
 
@@ -132,7 +164,7 @@ CREATE TABLE `student` (
   `email` varchar(100) NOT NULL,
   `admission_date` date NOT NULL,
   `batch` varchar(20) NOT NULL,
-  `course_name` varchar(120) NOT NULL,
+  `course_id` int(120) NOT NULL,
   `username` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -140,15 +172,15 @@ CREATE TABLE `student` (
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`student_id`, `first_name`, `last_name`, `date_of_birth`, `gender`, `address`, `contact_number`, `email`, `admission_date`, `batch`, `course_name`, `username`) VALUES
-(13, 'John', 'Doe', '2000-01-01', 'Male', '123 Main St', '1234567890', 'john.doe@example.com', '2022-09-01', 'Batch A', 'Bachelor of Arts (BA)', 'john_doe123'),
-(14, 'Jane', 'Smith', '1999-05-15', 'Female', '456 Oak Ave', '9876543210', 'jane.smith@example.com', '2022-09-01', 'Batch B', 'Bachelor of Science (BS)', 'jane_smith456'),
-(15, 'Michael', 'Johnson', '2001-03-20', 'Male', '789 Elm Rd', '4561237890', 'michael.johnson@example.com', '2022-09-01', 'Batch C', 'Bachelor of Business Administration (BBA)', 'michael_johnson789'),
-(16, 'Emily', 'Williams', '1998-12-05', 'Female', '321 Pine St', '9876543210', 'emily.williams@example.com', '2022-09-01', 'Batch D', 'Bachelor of Computer Science (BCS)', 'emily_williams321'),
-(18, 'Sarah', 'Brown', '1997-09-25', 'Female', '987 Cedar Ave', '9876543210', 'sarah.brown@example.com', '2022-09-01', 'Batch B', 'Bachelor of Education (BEd)', 'sarah_brown987'),
-(20, 'Jessica', 'Miller', '1999-07-18', 'Female', '567 Oak Rd', '9876543210', 'jessica.miller@example.com', '2022-09-01', 'Batch D', 'Bachelor of Commerce (BCom)', 'jessica_miller567'),
-(22, 'Ashley', 'Anderson', '1998-11-12', 'Female', '432 Pine Rd', '9876543210', 'ashley.anderson@example.com', '2022-09-01', 'Batch B', 'Bachelor of Social Work (BSW)', 'ashley_anderson432'),
-(24, 'Amanda', 'Harris', '1997-10-22', 'Female', '901 Cedar Ave', '9876543210', 'amanda.harris@example.com', '2022-09-01', 'Batch D', 'Bachelor of Medicine and Bachelor of Surgery (MBBS)', 'amanda_harris901');
+INSERT INTO `student` (`student_id`, `first_name`, `last_name`, `date_of_birth`, `gender`, `address`, `contact_number`, `email`, `admission_date`, `batch`, `course_id`, `username`) VALUES
+(13, 'John', 'Doe', '2000-01-01', 'Male', '123 Main St', '1234567890', 'john.doe@example.com', '2022-09-01', 'Batch A', 1, 'john_doe123'),
+(14, 'Jane', 'Smith', '1999-05-15', 'Female', '456 Oak Ave', '9876543210', 'jane.smith@example.com', '2022-09-01', 'Batch B', 2, 'jane_smith456'),
+(15, 'Michael', 'Johnson', '2001-03-20', 'Male', '789 Elm Rd', '4561237890', 'michael.johnson@example.com', '2022-09-01', 'Batch C', 1, 'michael_johnson789'),
+(16, 'Emily', 'Williams', '1998-12-05', 'Female', '321 Pine St', '9876543210', 'emily.williams@example.com', '2022-09-01', 'Batch D', 6, 'emily_williams321'),
+(18, 'Sarah', 'Brown', '1997-09-25', 'Female', '987 Cedar Ave', '9876543210', 'sarah.brown@example.com', '2022-09-01', 'Batch B', 6, 'sarah_brown987'),
+(20, 'Jessica', 'Miller', '1999-07-18', 'Female', '567 Oak Rd', '9876543210', 'jessica.miller@example.com', '2022-09-01', 'Batch D', 2, 'jessica_miller567'),
+(22, 'Ashley', 'Anderson', '1998-11-12', 'Female', '432 Pine Rd', '9876543210', 'ashley.anderson@example.com', '2022-09-01', 'Batch B', 8, 'ashley_anderson432'),
+(24, 'Amanda', 'Harris', '1997-10-22', 'Female', '901 Cedar Ave', '9876543210', 'amanda.harris@example.com', '2022-09-01', 'Batch D', 3, 'amanda_harris901');
 
 -- --------------------------------------------------------
 
@@ -201,14 +233,14 @@ CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(100) NOT NULL,
-  `user_type` enum('student','staff','admin') NOT NULL
+  `userType` enum('student','staff','admin') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
+INSERT INTO `users` (`user_id`, `username`, `password`, `userType`) VALUES
 (13, 'john_doe123', 'password123', 'student'),
 (14, 'jane_smith456', 'password456', 'student'),
 (15, 'michael_johnson789', 'password789', 'student'),
@@ -220,11 +252,18 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
 (21, 'matt_taylor890', 'password890', 'admin'),
 (22, 'ashley_anderson432', 'password432', 'student'),
 (23, 'andrew_thomas876', 'password876', 'staff'),
-(24, 'amanda_harris901', 'password901', 'student');
+(24, 'amanda_harris901', 'password901', 'student'),
+(25, 'getty77', 'iamgetty11', 'student');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `courses`
+--
+ALTER TABLE `courses`
+  ADD PRIMARY KEY (`course_id`);
 
 --
 -- Indexes for table `marks`
@@ -244,7 +283,8 @@ ALTER TABLE `modules`
 -- Indexes for table `student`
 --
 ALTER TABLE `student`
-  ADD PRIMARY KEY (`student_id`);
+  ADD PRIMARY KEY (`student_id`),
+  ADD KEY `fk_course_id` (`course_id`);
 
 --
 -- Indexes for table `student_courses`
@@ -269,6 +309,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `courses`
+--
+ALTER TABLE `courses`
+  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `marks`
@@ -304,7 +350,7 @@ ALTER TABLE `transcript`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Constraints for dumped tables
@@ -316,6 +362,12 @@ ALTER TABLE `users`
 ALTER TABLE `marks`
   ADD CONSTRAINT `marks_ibfk_1` FOREIGN KEY (`enrollment_id`) REFERENCES `student_courses` (`enrollment_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `marks_ibfk_2` FOREIGN KEY (`module_id`) REFERENCES `modules` (`module_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student`
+--
+ALTER TABLE `student`
+  ADD CONSTRAINT `fk_course_id` FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `student_courses`
