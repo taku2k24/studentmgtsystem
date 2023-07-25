@@ -13,8 +13,8 @@ public class StudentManagementSystem extends JFrame {
     private JComboBox<String> userTypeComboBox;
     private Connection connection;
     private static final String DB_URL = "jdbc:mysql://localhost:3306/student_ms";
-    private static final String DB_USER = "ashley";
-    private static final String DB_PASSWORD = "ash00ley";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "Password123#@!";
 
     public StudentManagementSystem() {
         super("Student Management System");

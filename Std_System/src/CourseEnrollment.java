@@ -43,7 +43,6 @@ public class CourseEnrollment extends JFrame {
         }
 
         // Set up the main window
-        setSize(600, 1200);
         setTitle("Course Enrollment");
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
