@@ -1,5 +1,3 @@
-//code to prompt student to add details when they register
-
 package mgtsystem;
 import javax.swing.*;
 import java.awt.*;
