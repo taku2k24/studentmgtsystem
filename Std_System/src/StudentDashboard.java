@@ -43,6 +43,24 @@ public class StudentDashboard extends JFrame {
         });
         profileMenu.add(profileMenuItem);
 
+        JMenuItem EnrollMenuItem = new JMenuItem("View Enroll");
+        EnrollMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openEnrollWindow();
+            }
+        });
+        modulesMenu.add(EnrollMenuItem);
+
+        JMenuItem PayMenuItem = new JMenuItem("View Payment");
+        PayMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openPayWindow();
+            }
+        });
+        paymentsMenu.add(PayMenuItem);
+
         // Create the content panel with a background picture
         JPanel contentPanel = new JPanel() {
             @Override
@@ -73,6 +91,16 @@ public class StudentDashboard extends JFrame {
 
     private void openProfileWindow() {
         Profile profileFrame = new Profile(username);
+        // profile.setVisible(true);
+    }
+
+    private void openEnrollWindow() {
+        Enrollment enrollFrame = new Enrollment();
+        // profile.setVisible(true);
+    }
+
+    private void openPayWindow() {
+        Payment payFrame = new Payment(username);
         // profile.setVisible(true);
     }
 }

@@ -142,7 +142,7 @@ public class Enrollment {
         frame.setLocationRelativeTo(null);
         frame.setSize(600, 700);
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     public static void main(String[] args){
