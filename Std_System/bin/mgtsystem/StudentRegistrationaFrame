@@ -1,9 +1,10 @@
+package mgtsystem;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 
-public class Register extends JFrame {
+public class StudentRegistrationFrame extends JFrame {
     private JTextField firstNameField;
     private JTextField lastNameField;
     private JTextField dateOfBirthField;
@@ -15,19 +16,23 @@ public class Register extends JFrame {
     private JTextField batchField;
     private JComboBox<String> courseNameComboBox;
     private JTextField usernameField;
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/student_ms";
+    private static final String DB_USER = "ashley";
+    private static final String DB_PASSWORD = "ash00ley";
 
-    private String username;
+    private String username; // Store the username
 
+    // Rest of the code remains the same...
     private JButton submitButton;
-    private DatabaseConnectionManager connectionManager;
+    private Connection connection;
 
-    public Register(String username) {
+    public StudentRegistrationFrame(String username) {
         super("Student Registration");
-        this.username = username;
+       this.username = username;
         initializeUI();
-        // Create an instance of DatabaseConnectionManager
-        connectionManager = DatabaseConnectionManager.getInstance();
+        connectToDatabase();
     }
+
 
     private void initializeUI() {
         // Create and arrange UI components
@@ -134,9 +139,9 @@ public class Register extends JFrame {
         panel.add(courseNameLabel, constraints);
 
         String[] courseNames = {
-                "Bachelor of Arts (BA)",
-                "Bachelor of Science (BS)",
-                // Add other course names here...
+            "Bachelor of Arts (BA)",
+            "Bachelor of Science (BS)",
+            // Add other course names here...
         };
         courseNameComboBox = new JComboBox<>(courseNames);
         constraints.gridx = 1;
@@ -167,45 +172,62 @@ public class Register extends JFrame {
         panel.add(submitButton, constraints);
 
         add(panel, BorderLayout.CENTER);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
+    // Rest of the code remains the same...
+
+        // Set frame properties, size, and visibility.
+
+        // Same method to connect to the database as used in the previous code.
+        private void connectToDatabase() {
+            try {
+                // Load the MySQL JDBC driver
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                
+                // Establish the connection
+                connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                System.out.println("Connected to the database.");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    
     private void saveStudentDetails() {
-        // Retrieve student details from text fields...
-        String firstName = firstNameField.getText();
-        String lastName = lastNameField.getText();
-        String dateOfBirth = dateOfBirthField.getText();
-        String gender = genderField.getText();
-        String address = addressField.getText();
-        String contactNumber = contactNumberField.getText();
-        String email = emailField.getText();
-        String admissionDate = admissionDateField.getText();
-        String batch = batchField.getText();
-        String courseName = (String) courseNameComboBox.getSelectedItem();
-        String username = this.username;
-        // Display the retrieved data in a JOptionPane...
-        StringBuilder result = new StringBuilder();
-        result.append("First Name: ").append(firstName).append("\n");
-        result.append("Last Name: ").append(lastName).append("\n");
-        result.append("Date of Birth: ").append(dateOfBirth).append("\n");
-        result.append("Gender: ").append(gender).append("\n");
-        result.append("Address: ").append(address).append("\n");
-        result.append("Contact Number: ").append(contactNumber).append("\n");
-        result.append("Email: ").append(email).append("\n");
-        result.append("Admission Date: ").append(admissionDate).append("\n");
-        result.append("Batch: ").append(batch).append("\n");
-        result.append("Course Name: ").append(courseName).append("\n");
-        result.append("Username: ").append(username).append("\n");
+        // Retrieve student details from text fields
+            String firstName = firstNameField.getText();
+            String lastName = lastNameField.getText();
+            String dateOfBirth = dateOfBirthField.getText();
+            String gender = genderField.getText();
+            String address = addressField.getText();
+            String contactNumber = contactNumberField.getText();
+            String email = emailField.getText();
+            String admissionDate = admissionDateField.getText();
+            String batch = batchField.getText();
+            String courseName = (String) courseNameComboBox.getSelectedItem();
+            String username = this.username; // Get the username from the text field
+    
+            // Display the retrieved data in a JOptionPane
+            StringBuilder result = new StringBuilder();
+            result.append("First Name: ").append(firstName).append("\n");
+            result.append("Last Name: ").append(lastName).append("\n");
+            result.append("Date of Birth: ").append(dateOfBirth).append("\n");
+            result.append("Gender: ").append(gender).append("\n");
+            result.append("Address: ").append(address).append("\n");
+            result.append("Contact Number: ").append(contactNumber).append("\n");
+            result.append("Email: ").append(email).append("\n");
+            result.append("Admission Date: ").append(admissionDate).append("\n");
+            result.append("Batch: ").append(batch).append("\n");
+            result.append("Course Name: ").append(courseName).append("\n");
+            result.append("Username: ").append(username).append("\n");
+    
+            JOptionPane.showMessageDialog(this, result.toString(), "Student Details", JOptionPane.INFORMATION_MESSAGE);
+        
 
-        JOptionPane.showMessageDialog(this, result.toString(), "Student Details", JOptionPane.INFORMATION_MESSAGE);
-
-        // Insert the student details into the database using the
-        // DatabaseConnectionManager
-        try (Connection connection = connectionManager.getConnection()) {
+        // Insert the student details into the database
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_management_system", "username", "password");
             String query = "INSERT INTO student (first_name, last_name, date_of_birth, gender, address, contact_number, email, admission_date, batch, course_name, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, firstName);
@@ -221,25 +243,11 @@ public class Register extends JFrame {
             preparedStatement.setString(11, username); // Use the stored username
 
             preparedStatement.executeUpdate();
+            connection.close();
             JOptionPane.showMessageDialog(this, "Student details saved successfully!");
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error saving student details: " + e.getMessage(), "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error saving student details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    }
 
-    // Rest of the code remains the same...
-
-    // public static void main(String[] args) {
-    //     SwingUtilities.invokeLater(new Runnable() {
-    //         @Override
-    //         public void run() {
-    //             StudentRegistrationFrame frame = new StudentRegistrationFrame("your_username");
-    //             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //             frame.pack();
-    //             frame.setLocationRelativeTo(null);
-    //             frame.setVisible(true);
-    //         }
-    //     });
-    // }
-}

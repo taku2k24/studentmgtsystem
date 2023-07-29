@@ -48,12 +48,6 @@ public class Login extends JFrame {
         constraints.gridy = 1;
         panel.add(passwordField, constraints);
 
-        String[] userTypes = { "student", "staff", "admin" };
-        userTypeComboBox = new JComboBox<>(userTypes);
-        constraints.gridx = 1;
-        constraints.gridy = 3;
-        panel.add(userTypeComboBox, constraints); // Add the userTypeComboBox to the panel
-
         loginButton = new JButton("Login");
         constraints.gridx = 0;
         constraints.gridy = 2;
@@ -65,16 +59,11 @@ public class Login extends JFrame {
         });
         panel.add(loginButton, constraints);
 
-        registerButton = new JButton("Register");
+        String[] userTypes = { "student", "staff", "admin" };
+        userTypeComboBox = new JComboBox<>(userTypes);
         constraints.gridx = 1;
-        constraints.gridy = 2;
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                register();
-            }
-        });
-        panel.add(registerButton, constraints);
+        constraints.gridy = 3;
+        panel.add(userTypeComboBox, constraints); // Add the userTypeComboBox to the panel
 
         add(panel, BorderLayout.CENTER);
 
@@ -132,22 +121,8 @@ public class Login extends JFrame {
                 statement.setString(2, password);
                 statement.setString(3, userType); // Use the selected user type
 
-                int rowsInserted = statement.executeUpdate();
+                statement.executeUpdate();
 
-                if (rowsInserted > 0) {
-                    JOptionPane.showMessageDialog(this, "Registration successful. You can now login.");
-
-                    // Open the StudentRegistrationFrame after successful registration
-                    Register registrationFrame = new Register(username);
-                    registrationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    registrationFrame.setSize(400, 400);
-                    registrationFrame.setVisible(true);
-
-                    // Close the current registration frame
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Registration failed. Please try again.");
-                }
                 statement.close();
             } catch (SQLException e) {
                 // Handle duplicate username, etc.

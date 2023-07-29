@@ -9,36 +9,24 @@ public class PaymentManager {
         this.connectionManager = connectionManager;
     }
 
-    public void updatePaymentStatus(String username, String paymentStatus, String paymentMethod, boolean adminFeeBool, boolean tuitionFeeBool, boolean transportFeeBool) {
+    public boolean insertPaymentStatus(int userID, String paymentStatus, String paymentMethod, boolean adminFeeBool, boolean tuitionFeeBool, String otherOption) {
         try (Connection connection = connectionManager.getConnection()) {
-            String sql = "UPDATE payment SET payment_status = ?, payment_method = ?, "+
-                         "admin_fee = ?, tuition_fee = ?, transport_fee = ? "+
-                         "WHERE username = ?";
+            String sql = "INSERT INTO payment (userID, payment_status, payment_method, admin_fee, tuition_fee, Other) " +
+                         "VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, paymentStatus);
-            statement.setString(2, paymentMethod);
+            statement.setInt(1, userID);
+            statement.setString(2, paymentStatus);
+            statement.setString(3, paymentMethod);
+            statement.setBoolean(4, adminFeeBool);
+            statement.setBoolean(5, tuitionFeeBool);
+            statement.setString(6, otherOption);
 
-            if (adminFeeBool){
-                statement.setString(3, "1");
-            }else{
-                statement.setString(3, "0");
-            }
-            if (tuitionFeeBool){
-                statement.setString(4, "1");
-            }else{
-                statement.setString(4, "0");
-            }
-            if (transportFeeBool){
-                statement.setString(5, "1");
-            }else{
-                statement.setString(5, "0");
-            }
-
-            statement.setString(6, username);
-            statement.executeUpdate();
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle the exception as per your application's requirements
         }
+        return false;
     }
+
 }

@@ -248,7 +248,7 @@ public class Profile {
         Connection connection = connectionManager.getConnection();
 
         // Prepare the update statement
-        String updateQuery = "UPDATE students SET address = ?, mobile_number = ?, personal_email = ? WHERE student_id = ?";
+        String updateQuery = "UPDATE student SET address = ?, contact_number = ?, email = ? WHERE student_id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
             preparedStatement.setString(1, address);
@@ -265,6 +265,7 @@ public class Profile {
             // Handle any errors that occur during the database update.
             ex.printStackTrace();
             JOptionPane.showMessageDialog(frame, "Error updating profile. Please try again.");
+            
         }
     }
 
