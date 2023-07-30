@@ -53,7 +53,7 @@ public class Enrollment {
         statusEnrollment.add(modulePanel);
         frame.add(statusEnrollment, BorderLayout.NORTH);
 
-        moduleEnrollment = new JPanel(new GridLayout(6, 2));
+        moduleEnrollment = new JPanel(new GridLayout(7, 2));
         TitledBorder titledBorder3 = BorderFactory.createTitledBorder("Module Enrollment");
         moduleEnrollment.setBorder(titledBorder3);
         moduleBoxes = new JCheckBox[6];
@@ -62,8 +62,10 @@ public class Enrollment {
             moduleEnrollment.add(moduleBoxes[i]);
             moduleEnrollment.add(new JLabel(""));
         }
+        JPanel buttonContainer = new JPanel(new FlowLayout());
         moduleBtn = new JButton("Enroll");
-        moduleEnrollment.add(moduleBtn);
+        buttonContainer.add(moduleBtn);
+        moduleEnrollment.add(buttonContainer);
         frame.add(moduleEnrollment, BorderLayout.CENTER);
 
         moduleBtn.addActionListener(new ActionListener() {
@@ -329,7 +331,7 @@ public class Enrollment {
     }
 
     public static void main(String[] args) {
-        String username = "JohnDoe"; // Replace with the actual username
+        String username = "jessica_miller567"; // Replace with the actual username
         Enrollment enrollment = new Enrollment(username);
     }
 }
