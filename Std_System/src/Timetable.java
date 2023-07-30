@@ -5,9 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 
 public class Timetable extends JFrame {
 
@@ -16,7 +18,14 @@ public class Timetable extends JFrame {
     private JButton btnDisplay, btnClear;
     private JScrollPane sp;
 
-    public Timetable() {
+    private String username;
+
+    public Timetable(String username) {
+        this.username = username;
+        initializeUI();
+    }
+
+    public void initializeUI() {
         setTitle("TimeTable");
         getContentPane().setLayout((LayoutManager) new BorderLayout());
 
@@ -113,6 +122,6 @@ public class Timetable extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Timetable();
+        new Timetable("jessica_miller567");
     }
 }

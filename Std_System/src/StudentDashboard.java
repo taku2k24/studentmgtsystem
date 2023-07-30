@@ -114,7 +114,7 @@ public class StudentDashboard extends JFrame {
     }
 
     private void openTimetableWindow() {
-        Timetable timetableFrame = new Timetable();
+        Timetable timetableFrame = new Timetable(username);
         // profile.setVisible(true);
     }
 }
