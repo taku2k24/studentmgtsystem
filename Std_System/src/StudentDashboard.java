@@ -70,6 +70,15 @@ public class StudentDashboard extends JFrame {
         });
         timetableMenu.add(TimeTableMenuItem);
 
+        JMenuItem transcriptMenuItem = new JMenuItem("View Transcript");
+        transcriptMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openTranscriptWindow();
+            }
+        });
+        transcriptMenu.add(transcriptMenuItem);
+
         // Create the content panel with a background picture
         JPanel contentPanel = new JPanel() {
             @Override
@@ -115,6 +124,11 @@ public class StudentDashboard extends JFrame {
 
     private void openTimetableWindow() {
         Timetable timetableFrame = new Timetable(username);
+        // profile.setVisible(true);
+    }
+
+    private void openTranscriptWindow() {
+        Transcript transcriptFrame = new Transcript(username);
         // profile.setVisible(true);
     }
 }
