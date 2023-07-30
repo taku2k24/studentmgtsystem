@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 24, 2023 at 12:18 PM
+-- Generation Time: Jul 30, 2023 at 09:22 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -32,26 +32,27 @@ CREATE TABLE `courses` (
   `course_code` varchar(10) NOT NULL,
   `course_name` varchar(120) NOT NULL,
   `course_duration` varchar(50) NOT NULL,
-  `status` enum('active','archived') NOT NULL
+  `status` enum('active','archived') NOT NULL,
+  `tuition` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`course_id`, `course_code`, `course_name`, `course_duration`, `status`) VALUES
-(1, 'CS101', 'Introduction to Computer Science', '4', 'active'),
-(2, 'ENG202', 'Advanced English Literature', '3', 'active'),
-(3, 'MATH301', 'Advanced Mathematics', '4', 'active'),
-(4, 'BUS101', 'Introduction to Business Administration', '3', 'active'),
-(5, 'SCI201', 'General Science', '4', 'active'),
-(6, 'PHYSICS401', 'Quantum Physics', '3', 'active'),
-(7, 'CHEM202', 'Organic Chemistry', '4', 'active'),
-(8, 'HIST101', 'World History', '3', 'active'),
-(9, 'ARTS301', 'Fine Arts and Painting', '4', 'active'),
-(10, 'PSYCH101', 'Introduction to Psychology', '3', 'active'),
-(11, 'SOCIOLOGY2', 'Sociology and Human Behavior', '4', 'active'),
-(12, 'ECONOMICS3', 'Principles of Economics', '3', 'active');
+INSERT INTO `courses` (`course_id`, `course_code`, `course_name`, `course_duration`, `status`, `tuition`) VALUES
+(1, 'CS101', 'Bachelor of Arts (BA)', '4', 'active', 45000),
+(2, 'ENG202', 'Bachelor of Science (BS)', '3', 'active', 30000),
+(3, 'MATH301', 'Bachelor of Business Administration (BBA)', '4', 'active', 40000),
+(4, 'BUS101', 'Bachelor of Computer Science (BCS)', '3', 'active', 47000),
+(5, 'SCI201', 'Bachelor of Engineering (BE)', '4', 'active', 47000),
+(6, 'PHYSICS401', 'Bachelor of Education (BEd)', '3', 'active', 69000),
+(7, 'CHEM202', 'Bachelor of Fine Arts (BFA)', '4', 'active', 41000),
+(8, 'HIST101', 'Bachelor of Commerce (BCom)', '3', 'active', 46000),
+(9, 'ARTS301', 'Bachelor of Nursing (BN)', '4', 'active', 35000),
+(10, 'PSYCH101', 'Bachelor of Social Work (BSW)', '3', 'active', 47000),
+(11, 'SOCIOLOGY2', 'Bachelor of Architecture (BArch)', '4', 'active', 48000),
+(12, 'ECONOMICS3', 'Bachelor of Medicine and Bachelor of Surgery (MBBS)', '3', 'active', 50000);
 
 -- --------------------------------------------------------
 
@@ -145,7 +146,94 @@ INSERT INTO `modules` (`module_id`, `module_name`, `credits`, `course_name`) VAL
 (27, 'Hospitality Operations', 3, 'Bachelor of Hospitality Management (BHM)'),
 (28, 'Sports Psychology', 4, 'Bachelor of Sports Science (BSSc)'),
 (29, 'Environmental Engineering', 3, 'Bachelor of Environmental Engineering (BEnvE)'),
-(30, 'Health Sciences Research', 4, 'Bachelor of Health Sciences (BHSc)');
+(30, 'Health Sciences Research', 4, 'Bachelor of Health Sciences (BHSc)'),
+(31, 'Advanced Literature Studies', 4, 'Bachelor of Arts (BA)'),
+(32, 'Advanced Calculus', 5, 'Bachelor of Science (BS)'),
+(33, 'Business Strategy and Planning', 3, 'Bachelor of Business Administration (BBA)'),
+(34, 'Intermediate Programming Concepts', 4, 'Bachelor of Computer Science (BCS)'),
+(35, 'Mechanical Engineering Principles', 3, 'Bachelor of Engineering (BE)'),
+(36, 'Educational Leadership and Management', 4, 'Bachelor of Education (BEd)'),
+(37, 'Advanced Painting Techniques', 3, 'Bachelor of Fine Arts (BFA)'),
+(38, 'Digital Marketing and Analytics', 4, 'Bachelor of Commerce (BCom)'),
+(39, 'Medical Surgical Nursing', 3, 'Bachelor of Nursing (BN)'),
+(40, 'Social Work Interventions', 4, 'Bachelor of Social Work (BSW)'),
+(41, 'Architectural History and Theory', 3, 'Bachelor of Architecture (BArch)'),
+(42, 'Medical Ethics and Law', 4, 'Bachelor of Medicine and Bachelor of Surgery (MBBS)'),
+(43, 'Criminal Law and Procedure', 3, 'Bachelor of Law (LLB)'),
+(44, 'Child and Adolescent Psychology', 4, 'Bachelor of Psychology (BPsych)'),
+(45, 'Environmental Conservation', 3, 'Bachelor of Environmental Science (BEnvSc)'),
+(46, 'Media Ethics and Regulations', 4, 'Bachelor of Communication (BComm)'),
+(47, 'Social Media Marketing', 3, 'Bachelor of Media Studies (BMS)'),
+(48, 'Macroeconomics', 4, 'Bachelor of Economics (BEcon)'),
+(49, 'Web Development and Design', 3, 'Bachelor of Information Technology (BIT)'),
+(50, 'Music Composition and Arrangement', 4, 'Bachelor of Music (BMus)'),
+(51, 'Public Health Promotion', 3, 'Bachelor of Public Health (BPH)'),
+(52, 'International Diplomacy', 4, 'Bachelor of International Relations (BIR)'),
+(53, 'Critical Care Nursing', 3, 'Bachelor of Science in Nursing (BSN)'),
+(54, 'Sociological Research Methods', 4, 'Bachelor of Social Sciences (BSS)'),
+(55, 'Graphic Design for Digital Media', 3, 'Bachelor of Graphic Design (BDes)'),
+(56, 'Advanced Literature Research', 4, 'Bachelor of Arts (BA)'),
+(57, 'Advanced Topics in Calculus', 5, 'Bachelor of Science (BS)'),
+(58, 'Entrepreneurship and Innovation', 3, 'Bachelor of Business Administration (BBA)'),
+(59, 'Object-Oriented Programming', 4, 'Bachelor of Computer Science (BCS)'),
+(60, 'Materials Science in Engineering', 3, 'Bachelor of Engineering (BE)'),
+(61, 'Educational Technology and Media', 4, 'Bachelor of Education (BEd)'),
+(62, 'Portrait and Figure Drawing', 3, 'Bachelor of Fine Arts (BFA)'),
+(63, 'Consumer Behavior and Market Research', 4, 'Bachelor of Commerce (BCom)'),
+(64, 'Mental Health Nursing', 3, 'Bachelor of Nursing (BN)'),
+(65, 'Family and Child Welfare', 4, 'Bachelor of Social Work (BSW)'),
+(66, 'Urban Planning and Design', 3, 'Bachelor of Architecture (BArch)'),
+(67, 'Medical Genetics and Genomics', 4, 'Bachelor of Medicine and Bachelor of Surgery (MBBS)'),
+(68, 'International Human Rights Law', 3, 'Bachelor of Law (LLB)'),
+(69, 'Counseling Psychology', 4, 'Bachelor of Psychology (BPsych)'),
+(70, 'Environmental Impact Assessment', 3, 'Bachelor of Environmental Science (BEnvSc)'),
+(71, 'Digital Journalism', 4, 'Bachelor of Communication (BComm)'),
+(72, 'Film Studies and Analysis', 3, 'Bachelor of Media Studies (BMS)'),
+(73, 'International Trade and Finance', 4, 'Bachelor of Economics (BEcon)'),
+(74, 'Database Systems and Management', 3, 'Bachelor of Information Technology (BIT)'),
+(75, 'Music and Society', 4, 'Bachelor of Music (BMus)'),
+(76, 'Epidemiology and Disease Control', 3, 'Bachelor of Public Health (BPH)'),
+(77, 'Globalization and Development', 4, 'Bachelor of International Relations (BIR)'),
+(78, 'Maternal and Child Health Nursing', 3, 'Bachelor of Science in Nursing (BSN)'),
+(79, 'Social Policy and Welfare', 4, 'Bachelor of Social Sciences (BSS)'),
+(80, 'Digital Illustration and Animation', 3, 'Bachelor of Graphic Design (BDes)'),
+(81, 'World Literature', 3, 'Bachelor of Arts (BA)'),
+(82, 'Calculus II', 4, 'Bachelor of Science (BS)'),
+(83, 'Organizational Behavior', 3, 'Bachelor of Business Administration (BBA)'),
+(84, 'Advanced Programming', 4, 'Bachelor of Computer Science (BCS)'),
+(85, 'Fluid Mechanics', 3, 'Bachelor of Engineering (BE)'),
+(86, 'Learning Theories', 4, 'Bachelor of Education (BEd)'),
+(87, 'Oil Painting Techniques', 3, 'Bachelor of Fine Arts (BFA)'),
+(88, 'Digital Marketing', 4, 'Bachelor of Commerce (BCom)'),
+(89, 'Human Anatomy and Physiology', 3, 'Bachelor of Nursing (BN)'),
+(90, 'Counseling Skills', 4, 'Bachelor of Social Work (BSW)'),
+(91, 'Architectural Drawing', 3, 'Bachelor of Architecture (BArch)'),
+(92, 'Cell Biology', 4, 'Bachelor of Medicine and Bachelor of Surgery (MBBS)');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment`
+--
+
+CREATE TABLE `payment` (
+  `payment_id` int(11) NOT NULL,
+  `userID` int(11) DEFAULT NULL,
+  `payment_status` varchar(50) DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `admin_fee` tinyint(1) DEFAULT NULL,
+  `tuition_fee` tinyint(1) DEFAULT NULL,
+  `transport_fee` tinyint(1) DEFAULT NULL,
+  `Other` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payment`
+--
+
+INSERT INTO `payment` (`payment_id`, `userID`, `payment_status`, `payment_method`, `admin_fee`, `tuition_fee`, `transport_fee`, `Other`) VALUES
+(1, 13, 'Complete Payment Done', 'Cash', 1, 1, NULL, 'Metro Card'),
+(2, 13, 'Complete Payment Done', 'Cash', 1, 1, NULL, 'Bus Pass');
 
 -- --------------------------------------------------------
 
@@ -180,7 +268,10 @@ INSERT INTO `student` (`student_id`, `first_name`, `last_name`, `date_of_birth`,
 (18, 'Sarah', 'Brown', '1997-09-25', 'Female', '987 Cedar Ave', '9876543210', 'sarah.brown@example.com', '2022-09-01', 'Batch B', 6, 'sarah_brown987'),
 (20, 'Jessica', 'Miller', '1999-07-18', 'Female', '567 Oak Rd', '9876543210', 'jessica.miller@example.com', '2022-09-01', 'Batch D', 2, 'jessica_miller567'),
 (22, 'Ashley', 'Anderson', '1998-11-12', 'Female', '432 Pine Rd', '9876543210', 'ashley.anderson@example.com', '2022-09-01', 'Batch B', 8, 'ashley_anderson432'),
-(24, 'Amanda', 'Harris', '1997-10-22', 'Female', '901 Cedar Ave', '9876543210', 'amanda.harris@example.com', '2022-09-01', 'Batch D', 3, 'amanda_harris901');
+(24, 'Amanda', 'Harris', '1997-10-22', 'Female', '901 Cedar Ave', '9876543210', 'amanda.harris@example.com', '2022-09-01', 'Batch D', 3, 'amanda_harris901'),
+(25, 'Getty', 'Getty', '1998-05-12', 'Male', 'my house77', '7830928167', 'gettywods@gmail.com', '2023-01-15', 'Batch A', 1, 'getty77'),
+(26, 'Lion', 'Lioness', '1999-07-08', 'Female', '456 Park Ave', '9876543210', 'lion@example.com', '2022-12-01', 'Batch B', 2, 'lion44'),
+(27, 'Today', 'Iamtired', '2000-03-20', 'Male', '789 Broadway', '9876543210', 'today@example.com', '2023-05-30', 'Batch C', 3, 'todayy');
 
 -- --------------------------------------------------------
 
@@ -207,7 +298,23 @@ INSERT INTO `student_courses` (`enrollment_id`, `student_id`, `enrollment_date`,
 (18, 18, '2022-09-01', 'credit_card'),
 (20, 20, '2022-09-01', 'direct_debit'),
 (22, 22, '2022-09-01', 'cash'),
-(24, 24, '2022-09-01', 'credit_card');
+(24, 24, '2022-09-01', 'credit_card'),
+(25, 25, '2023-01-15', 'credit_card'),
+(26, 26, '2022-12-01', 'cash'),
+(27, 27, '2023-05-30', 'direct_debit');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_modules`
+--
+
+CREATE TABLE `student_modules` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `module_id` int(11) NOT NULL,
+  `module_name` varchar(150) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -253,7 +360,9 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `userType`) VALUES
 (22, 'ashley_anderson432', 'password432', 'student'),
 (23, 'andrew_thomas876', 'password876', 'staff'),
 (24, 'amanda_harris901', 'password901', 'student'),
-(25, 'getty77', 'iamgetty11', 'student');
+(25, 'getty77', 'iamgetty11', 'student'),
+(26, 'lion44', 'lioness44', 'student'),
+(27, 'todayy', 'iamtired44', 'student');
 
 --
 -- Indexes for dumped tables
@@ -280,11 +389,19 @@ ALTER TABLE `modules`
   ADD PRIMARY KEY (`module_id`);
 
 --
+-- Indexes for table `payment`
+--
+ALTER TABLE `payment`
+  ADD PRIMARY KEY (`payment_id`),
+  ADD KEY `userID` (`userID`);
+
+--
 -- Indexes for table `student`
 --
 ALTER TABLE `student`
   ADD PRIMARY KEY (`student_id`),
-  ADD KEY `fk_course_id` (`course_id`);
+  ADD KEY `fk_course_id` (`course_id`),
+  ADD KEY `username` (`username`);
 
 --
 -- Indexes for table `student_courses`
@@ -292,6 +409,14 @@ ALTER TABLE `student`
 ALTER TABLE `student_courses`
   ADD PRIMARY KEY (`enrollment_id`),
   ADD KEY `student_id` (`student_id`);
+
+--
+-- Indexes for table `student_modules`
+--
+ALTER TABLE `student_modules`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `username` (`username`),
+  ADD KEY `module_id` (`module_id`);
 
 --
 -- Indexes for table `transcript`
@@ -326,19 +451,31 @@ ALTER TABLE `marks`
 -- AUTO_INCREMENT for table `modules`
 --
 ALTER TABLE `modules`
-  MODIFY `module_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `module_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+
+--
+-- AUTO_INCREMENT for table `payment`
+--
+ALTER TABLE `payment`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `student_courses`
 --
 ALTER TABLE `student_courses`
-  MODIFY `enrollment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `enrollment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT for table `student_modules`
+--
+ALTER TABLE `student_modules`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `transcript`
@@ -350,7 +487,7 @@ ALTER TABLE `transcript`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Constraints for dumped tables
@@ -364,6 +501,12 @@ ALTER TABLE `marks`
   ADD CONSTRAINT `marks_ibfk_2` FOREIGN KEY (`module_id`) REFERENCES `modules` (`module_id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `payment`
+--
+ALTER TABLE `payment`
+  ADD CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `student` (`student_id`);
+
+--
 -- Constraints for table `student`
 --
 ALTER TABLE `student`
@@ -374,6 +517,13 @@ ALTER TABLE `student`
 --
 ALTER TABLE `student_courses`
   ADD CONSTRAINT `student_courses_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_modules`
+--
+ALTER TABLE `student_modules`
+  ADD CONSTRAINT `student_modules_ibfk_1` FOREIGN KEY (`username`) REFERENCES `student` (`username`),
+  ADD CONSTRAINT `student_modules_ibfk_2` FOREIGN KEY (`module_id`) REFERENCES `modules` (`module_id`);
 
 --
 -- Constraints for table `transcript`
