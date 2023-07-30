@@ -61,6 +61,15 @@ public class StudentDashboard extends JFrame {
         });
         paymentsMenu.add(PayMenuItem);
 
+        JMenuItem TimeTableMenuItem = new JMenuItem("View Timetable");
+        TimeTableMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openTimetableWindow();
+            }
+        });
+        timetableMenu.add(TimeTableMenuItem);
+
         // Create the content panel with a background picture
         JPanel contentPanel = new JPanel() {
             @Override
@@ -101,6 +110,11 @@ public class StudentDashboard extends JFrame {
 
     private void openPayWindow() {
         Payment payFrame = new Payment(username);
+        // profile.setVisible(true);
+    }
+
+    private void openTimetableWindow() {
+        Timetable timetableFrame = new Timetable();
         // profile.setVisible(true);
     }
 }
