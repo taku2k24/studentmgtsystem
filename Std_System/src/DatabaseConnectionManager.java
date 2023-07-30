@@ -1,13 +1,13 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+import javax.swing.*;
 
 //CHANGE USERNAME AND PASSWORD ACCORDINGLY
 public class DatabaseConnectionManager {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/student_ms";
-    private static final String DB_USERNAME = "ashley";
-    private static final String DB_PASSWORD = "ash00ley";
+    private static final String DB_USERNAME = "";
+    private static final String DB_PASSWORD = "";
 
     private static DatabaseConnectionManager instance;
     private Connection connection;
@@ -29,6 +29,9 @@ public class DatabaseConnectionManager {
                 connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
             }
         } catch (SQLException e) {
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "Database connection failure! Check credentials.",
+               "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
         return connection;
