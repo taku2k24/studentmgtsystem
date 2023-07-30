@@ -1,26 +1,13 @@
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.table.*;
 
-import db.ViewTimeTable;
-
-import java.awt.*;
 import javax.swing.*;
-import java.sql.*;
-import javax.swing.event.*;
+import javax.swing.table.DefaultTableModel;
 
 public class Timetable extends JFrame {
 
@@ -33,7 +20,7 @@ public class Timetable extends JFrame {
         setTitle("TimeTable");
         getContentPane().setLayout((LayoutManager) new BorderLayout());
 
-        JButton btnDisplay = new JButton("View Timetable");
+        btnDisplay = new JButton("View Timetable");
         btnDisplay.setFont(new Font("Arial", Font.BOLD, 11));
 
         table = new JTable();
@@ -72,67 +59,57 @@ public class Timetable extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         setVisible(true);
-
     }
 
     // Display Button Handler
     private void Display() {
-        try {
+        // try {
             DatabaseConnectionManager dbManager = DatabaseConnectionManager.getInstance();
             Connection con = dbManager.getConnection();
 
-            /*
-             * SELECT modules.module_name, modules.day, modules.time_slot
-             * FROM modules
-             * RIGHT JOIN student ON student.course_name = modules.course_name
-             * WHERE student.username
-             * IN(SELECT username FROM student WHERE username = "john_doe123")
-             * ORDER BY modules.day;
-             */
+            String query = "SELECT m.module_id, m.module_name, m.day, m.time_slot " +
+            "FROM modules AS m " + 
+            "JOIN student_modules AS sm ON m.module_id = sm.module_id AND m.module_name = sm.module_name " +
+            "WHERE sm.username = ?; " ;
 
-            String query = "select modules.module_id, modules.module_name, modules.day, modules.time_slot from modules RIGHT JOIN student ON student.course_name = modules.course_name WHERE student.username IN(SELECT username FROM student WHERE username = \"john_doe123\") ORDER BY modules.day, modules.time_slot;";
-            java.sql.Statement st = con.createStatement();
+            try (PreparedStatement preparedStatement = con.prepareStatement(query);) {
+                preparedStatement.setString(1, "jessica_miller567"); // Set the parameter for username
 
-            /*
-             * PREPARED STATEMENT (EDIT TO ACCOMMODATE LOGGED IN USER)
-             * java.sql.Statement st = con.createStatement();
-             * PreparedStatement st = con.prepareStatement(query);
-             * statement.setString(1, username);
-             */
+                // Execute the query and get the ResultSet
+                ResultSet rs = preparedStatement.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                System.out.println(rsmd);
 
-            // EXECUTE QUERY
-            ResultSet rs = ((java.sql.Statement) st).executeQuery(query);
-            ResultSetMetaData rsmd = rs.getMetaData();
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                model.setRowCount(0); // Clear the existing table data
 
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-
-            // fetch column info
-            int cols = rsmd.getColumnCount();
-            Object[] colName = { "Module ID", "Module Name", "Day", "Time" };
-            for (int i = 0; i < cols; i++) {
+                int cols = rsmd.getColumnCount();
+                Object[] colName = { "Module ID", "Module Name", "Day", "Time" };
                 model.setColumnIdentifiers(colName);
 
                 String modId, modName, modDay, modTime;
                 while (rs.next()) {
-                    modId = rs.getString(1);
+                    modId = rs.getString(1).toString();
                     modName = rs.getString(2);
                     modDay = rs.getString(3);
-                    modTime = (rs.getString(4)).substring(0, 5);
+                    modTime = (rs.getString(4).toString()).substring(0, 5);
                     String[] row = { modId, modName, modDay, modTime };
                     model.addRow(row);
                 }
+
+                // Close the PreparedStatement and the connection after use
+                preparedStatement.close();
                 dbManager.closeConnection();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to load timetable data.");}
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     // Clear Button Handler
     private void Clear() {
-        table.setModel(new DefaultTableModel());
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0); // Clear the table data
     }
 
     public static void main(String[] args) {
