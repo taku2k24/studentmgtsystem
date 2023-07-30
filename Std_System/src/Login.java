@@ -107,32 +107,32 @@ public class Login extends JFrame {
         }
     }
 
-    private void register() {
-        String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
-        String userType = (String) userTypeComboBox.getSelectedItem();
+    // private void register() {
+    //     String username = usernameField.getText();
+    //     String password = new String(passwordField.getPassword());
+    //     String userType = (String) userTypeComboBox.getSelectedItem();
 
-        // Insert the user details into the database using the DatabaseConnectionManager
-        try (Connection connection = connectionManager.getConnection()) {
-            try {
-                String query = "INSERT INTO users (username, password, userType) VALUES (?, ?, ?)";
-                PreparedStatement statement = connection.prepareStatement(query);
-                statement.setString(1, username);
-                statement.setString(2, password);
-                statement.setString(3, userType); // Use the selected user type
+    //     // Insert the user details into the database using the DatabaseConnectionManager
+    //     try (Connection connection = connectionManager.getConnection()) {
+    //         try {
+    //             String query = "INSERT INTO users (username, password, userType) VALUES (?, ?, ?)";
+    //             PreparedStatement statement = connection.prepareStatement(query);
+    //             statement.setString(1, username);
+    //             statement.setString(2, password);
+    //             statement.setString(3, userType); // Use the selected user type
 
-                statement.executeUpdate();
+    //             statement.executeUpdate();
 
-                statement.close();
-            } catch (SQLException e) {
-                // Handle duplicate username, etc.
-                JOptionPane.showMessageDialog(this, "Registration failed. Please try a different username.");
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    //             statement.close();
+    //         } catch (SQLException e) {
+    //             // Handle duplicate username, etc.
+    //             JOptionPane.showMessageDialog(this, "Registration failed. Please try a different username.");
+    //             e.printStackTrace();
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     // Rest of the code remains the same...
 
