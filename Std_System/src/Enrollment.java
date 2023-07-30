@@ -43,7 +43,7 @@ public class Enrollment {
         JPanel modulePanel = new JPanel(new GridLayout(6, 2));
         moduleLabels = new JLabel[6];
         credsLabels = new JLabel[6];
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             modulePanel.add(new JLabel("Module " + (i + 1) + " - "));
             moduleLabels[i] = new JLabel("N/A");
             modulePanel.add(moduleLabels[i]);
@@ -57,7 +57,7 @@ public class Enrollment {
         TitledBorder titledBorder3 = BorderFactory.createTitledBorder("Module Enrollment");
         moduleEnrollment.setBorder(titledBorder3);
         moduleBoxes = new JCheckBox[6];
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             moduleBoxes[i] = new JCheckBox();
             moduleEnrollment.add(moduleBoxes[i]);
             moduleEnrollment.add(new JLabel(""));
