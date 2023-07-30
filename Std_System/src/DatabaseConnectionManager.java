@@ -6,8 +6,8 @@ import javax.swing.*;
 //CHANGE USERNAME AND PASSWORD ACCORDINGLY
 public class DatabaseConnectionManager {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/student_ms";
-    private static final String DB_USERNAME = "";
-    private static final String DB_PASSWORD = "";
+    private static final String DB_USERNAME = "ashley";
+    private static final String DB_PASSWORD = "ash00ley";
 
     private static DatabaseConnectionManager instance;
     private Connection connection;
