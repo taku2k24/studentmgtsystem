@@ -95,7 +95,7 @@ public class StudentDashboard extends JFrame {
     }
 
     private void openEnrollWindow() {
-        Enrollment enrollFrame = new Enrollment();
+        Enrollment enrollFrame = new Enrollment(username);
         // profile.setVisible(true);
     }
 

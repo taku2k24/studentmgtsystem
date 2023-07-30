@@ -3,39 +3,45 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.sql.*;
 import java.sql.Connection;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class Enrollment {
     private JFrame frame;
-    private JPanel statusEnrollment, courseEnrollment, moduleEnrollment;
+    private JPanel statusEnrollment, moduleEnrollment;
     private JCheckBox[] moduleBoxes;
-    private JButton courseBtn, moduleBtn;
-    private JComboBox<String> courseSelectionList;
+    private JButton moduleBtn;
 
     private JLabel courseLabel, creditLabel;
     private JLabel[] moduleLabels, credsLabels;
 
     private Connection connection;
 
-    public Enrollment() {
-        initializeDatabaseConnection();
+    private String username;
 
+    public Enrollment(String username) {
+        this.username = username;
+        initializeDatabaseConnection();
+        // Call the method that initializes the UI and other components
+        initializeUI();
+    }
+
+    public void initializeUI() {
         // UI initialization and setup
         frame = new JFrame("Enrollment");
-        frame.setLayout(new GridLayout(2, 1, 0, 10));
+        frame.setLayout(new GridLayout(2, 1, 0, 10)); // 
 
         // ENROLLMENT STATUS SECTION
-        statusEnrollment = new JPanel(new GridLayout(2, 1));
+        statusEnrollment = new JPanel(new GridLayout(2, 2)); // Change to 2 rows, 2 columns
         TitledBorder titledBorder1 = BorderFactory.createTitledBorder("Enrollment Status");
         statusEnrollment.setBorder(titledBorder1);
-        JPanel statusInnerDiv = new JPanel(new GridLayout(3, 2));
-        statusInnerDiv.add(new JLabel("Course:"));
+        JPanel statusInnerDiv = new JPanel(new GridLayout(2, 2));
+        statusInnerDiv.add(new JLabel("Your course:"));
         courseLabel = new JLabel("N/A");
         statusInnerDiv.add(courseLabel);
         statusInnerDiv.add(new JLabel("Credits:"));
         creditLabel = new JLabel("N/A");
         statusInnerDiv.add(creditLabel);
-        statusInnerDiv.add(new JLabel("Modules:"));
-        statusInnerDiv.add(new JLabel(""));
         statusEnrollment.add(statusInnerDiv);
         JPanel modulePanel = new JPanel(new GridLayout(6, 2));
         moduleLabels = new JLabel[6];
@@ -48,24 +54,10 @@ public class Enrollment {
             modulePanel.add(credsLabels[i]);
         }
         statusEnrollment.add(modulePanel);
-        frame.add(statusEnrollment);
+        frame.add(statusEnrollment, BorderLayout.NORTH);
 
-        // MAIN INNER DIV
-        JPanel mainInnerDiv = new JPanel(new GridLayout(2, 1, 0, 10));
-
-        // COURSE ENROLLMENT SECTION
-        courseEnrollment = new JPanel(new GridLayout(3, 4));
-        TitledBorder titledBorder2 = BorderFactory.createTitledBorder("Course Enrollment");
-        courseEnrollment.setBorder(titledBorder2);
-        courseEnrollment.add(new JLabel("Select course: "));
-        courseSelectionList = new JComboBox<>();
-        courseEnrollment.add(courseSelectionList);
-        courseBtn = new JButton("Enroll");
-        courseEnrollment.add(courseBtn);
-        mainInnerDiv.add(courseEnrollment);
-
-        // MODULE ENROLLMENT SECTION
-        moduleEnrollment = new JPanel(new GridLayout(6, 4));
+        // MAIN INNER DIV (Module Enrollment Section)
+        moduleEnrollment = new JPanel(new GridLayout(6, 2)); // Change to 6 rows, 2 columns
         TitledBorder titledBorder3 = BorderFactory.createTitledBorder("Module Enrollment");
         moduleEnrollment.setBorder(titledBorder3);
         moduleBoxes = new JCheckBox[6];
@@ -77,26 +69,17 @@ public class Enrollment {
         }
         moduleBtn = new JButton("Enroll");
         moduleEnrollment.add(moduleBtn);
-        mainInnerDiv.add(moduleEnrollment);
-
-        frame.add(mainInnerDiv);
-
-        courseSelectionList.addActionListener(e -> {
-            String selectedCourse = (String) courseSelectionList.getSelectedItem();
-            if (selectedCourse != null) {
-                loadModules(selectedCourse);
-                loadEnrollmentStatus(selectedCourse); // Display enrollment status
-            }
-        });
+        frame.add(moduleEnrollment, BorderLayout.CENTER);
 
         moduleBtn.addActionListener(e -> {
-            String selectedCourse = (String) courseSelectionList.getSelectedItem();
-            if (selectedCourse != null) {
+            String selectedCourse = courseLabel.getText();
+            if (selectedCourse != null && !selectedCourse.equals("N/A")) {
                 enrollModules(selectedCourse);
             }
         });
 
-        loadCourses();
+
+        loadEnrollmentStatus();
 
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -105,52 +88,23 @@ public class Enrollment {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
-  
-
     private void initializeDatabaseConnection() {
         // Get the database connection instance
         DatabaseConnectionManager connectionManager = DatabaseConnectionManager.getInstance();
         connection = connectionManager.getConnection();
-
-        // Check if the connection is successful
-        if (connection != null) {
-            // Display a message indicating successful connection (optional)
-            JOptionPane.showMessageDialog(null, "Connected to the database successfully.");
-        } else {
-            // Display an error message if the connection fails
-            JOptionPane.showMessageDialog(null, "Failed to connect to the database.");
-        }
     }
-
-    private void loadCourses() {
-        // Fetch courses from the database and populate the courseSelectionList
-        // Database query to fetch courses...
-    	// Fetch courses from the database and populate the courseSelectionList
-        String query = "SELECT course_name FROM courses";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-            courseSelectionList.removeAllItems();
-            while (rs.next()) {
-                courseSelectionList.addItem(rs.getString("course_name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Failed to load courses.");
-        }
-    }
+   
 
     private void loadModules(String selectedCourse) {
         // Fetch modules related to the selectedCourse from the database and populate moduleLabels and credsLabels
-        // Database query to fetch modules...
-    	// Fetch modules related to the selectedCourse from the database and populate moduleLabels and credsLabels
-        String query = "SELECT module_name, credits FROM modules WHERE course_name = ?";
+        String query = "SELECT module_name FROM modules WHERE course_name = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, selectedCourse);
             ResultSet rs = stmt.executeQuery();
             int index = 0;
             while (rs.next()) {
                 moduleLabels[index].setText(rs.getString("module_name"));
-                credsLabels[index].setText(rs.getString("credits"));
+                credsLabels[index].setText("N/A");
                 moduleBoxes[index].setEnabled(true); // Enable the checkbox for the module
                 index++;
             }
@@ -176,52 +130,46 @@ public class Enrollment {
         }
     }
     
-    private void loadEnrollmentStatus(String selectedCourse) {
-        String username = "your-logged-in-username"; // Replace with the logged-in username
-
-        // First, retrieve the course_id for the selected course from the courses table
-        int courseId;
-        try {
-            courseId = getCourseId(selectedCourse);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Failed to retrieve course ID.");
-            return;
-        }
-
-        // Check if the student is enrolled in the selected course
-        String checkCourseEnrollmentQuery = "SELECT COUNT(*) FROM student WHERE username = ? AND course_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(checkCourseEnrollmentQuery)) {
-            stmt.setString(1, username);
-            stmt.setInt(2, courseId);
+    private String getCourseName(int courseId) {
+        String query = "SELECT course_name FROM courses WHERE course_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, courseId);
             ResultSet rs = stmt.executeQuery();
-            rs.next();
-            int enrollmentCount = rs.getInt(1);
-
-            if (enrollmentCount > 0) {
-                // If enrolled, display the enrollment status for the selected course and load enrolled modules
-                courseLabel.setText(selectedCourse);
-                creditLabel.setText(getCourseCredits(selectedCourse) + " credits");
-
-                // Load and display enrolled modules
-                loadEnrolledModules(username, courseId);
-            } else {
-                // If not enrolled, display a message indicating no enrollment for the selected course
-                courseLabel.setText("N/A");
-                creditLabel.setText("N/A");
-
-                // Clear the module enrollment status since there are no enrolled modules
-                clearModuleEnrollmentStatus();
-
-                // Allow the student to enroll modules for the selected course
-                enableModuleEnrollment(username, courseId);
+            if (rs.next()) {
+                return rs.getString("course_name");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Failed to check course enrollment status.");
+        }
+        return null;
+    }
+
+
+    private void loadEnrollmentStatus() {
+        // Fetch the course ID for the logged-in student from the student table
+        int courseId = getCourseIdForStudent(username);
+
+        if (courseId != -1) {
+            // Fetch the course name based on the course ID from the courses table
+            String courseName = getCourseName(courseId);
+
+            if (courseName != null) {
+                courseLabel.setText(courseName);
+
+                // Enable module enrollment for the student's course
+                enableModuleEnrollment(username, courseName);
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to retrieve course information for the student.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Failed to retrieve the course ID for the student.");
         }
     }
-    
+
+
+
+
+
     private int getModuleId(String moduleName) throws SQLException {
         String query = "SELECT module_id FROM modules WHERE module_name = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -233,8 +181,6 @@ public class Enrollment {
     }
 
     private void enrollModules(String selectedCourse) {
-        String username = "your-logged-in-username"; // Replace with the logged-in username
-
         // Check which modules the student selected for enrollment
         for (int i = 0; i < moduleBoxes.length; i++) {
             if (moduleBoxes[i].isSelected()) {
@@ -243,7 +189,7 @@ public class Enrollment {
                 // First, check if the student is already enrolled in the selected module
                 String checkModuleEnrollmentQuery = "SELECT COUNT(*) FROM student_modules WHERE username = ? AND module_id = ?";
                 try (PreparedStatement stmt = connection.prepareStatement(checkModuleEnrollmentQuery)) {
-                    stmt.setString(1, username);
+                    stmt.setString(1, username); // Use the class variable "username"
                     stmt.setInt(2, getModuleId(selectedModule));
                     ResultSet rs = stmt.executeQuery();
                     rs.next();
@@ -255,7 +201,7 @@ public class Enrollment {
                         // If not enrolled, insert the enrollment into the student_modules table
                         String enrollModuleQuery = "INSERT INTO student_modules (username, module_id) VALUES (?, ?)";
                         try (PreparedStatement enrollModuleStmt = connection.prepareStatement(enrollModuleQuery)) {
-                            enrollModuleStmt.setString(1, username);
+                            enrollModuleStmt.setString(1, username); // Use the class variable "username"
                             enrollModuleStmt.setInt(2, getModuleId(selectedModule));
                             enrollModuleStmt.executeUpdate();
                             JOptionPane.showMessageDialog(null, "You have successfully enrolled in the module: " + selectedModule);
@@ -272,21 +218,12 @@ public class Enrollment {
         }
     }
 
-    // Helper method to get the credits for a given course_name from the courses table
-    private int getCourseCredits(String courseName) throws SQLException {
-        String query = "SELECT credits FROM courses WHERE course_name = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, courseName);
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            return rs.getInt("credits");
-        }
-    }
+    
 
     private void loadEnrolledModules(String username, int courseId) {
         // Fetch enrolled modules from the database for the selected course and student
         String query = "SELECT module_name, credits FROM modules WHERE course_id = ? AND module_id IN " +
-                       "(SELECT module_id FROM modules WHERE username = ? AND course_id = ?)";
+                "(SELECT module_id FROM modules WHERE username = ? AND course_id = ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, courseId);
@@ -316,12 +253,14 @@ public class Enrollment {
         }
     }
 
-    private void enableModuleEnrollment(String username, int courseId) {
+ // ... (previous code)
+
+    private void enableModuleEnrollment(String username, String courseName) {
         // Fetch available modules for the selected course from the modules table
-        String query = "SELECT module_name, credits FROM modules WHERE course_id = ?";
+        String query = "SELECT module_id, module_name, credits FROM modules WHERE course_name = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, courseId);
+            stmt.setString(1, courseName);
             ResultSet rs = stmt.executeQuery();
 
             // Clear the module enrollment status first
@@ -330,14 +269,19 @@ public class Enrollment {
             // Enable module checkboxes in the UI to allow student enrollment
             int moduleIndex = 0;
             while (rs.next()) {
+                int moduleId = rs.getInt("module_id");
                 String moduleName = rs.getString("module_name");
                 int credits = rs.getInt("credits");
 
-                // Enable the checkboxes and display module names and credits in the UI
+                // Enable the checkboxes and display module names in the UI
                 moduleLabels[moduleIndex].setText(moduleName);
                 credsLabels[moduleIndex].setText(credits + " credits");
                 moduleBoxes[moduleIndex].setSelected(false);
                 moduleBoxes[moduleIndex].setEnabled(true);
+
+                // Add the ItemListener to the checkbox
+                moduleBoxes[moduleIndex].addItemListener(new ModuleCheckBoxListener(username, moduleId, moduleName, credits));
+
                 moduleIndex++;
             }
 
@@ -346,6 +290,82 @@ public class Enrollment {
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to load available modules.");
+        }
+    }
+
+    // ... (rest of the code)
+    private class ModuleCheckBoxListener implements ItemListener {
+        private final String username;
+        private final int moduleId;
+        private final String moduleName;
+        private final int credits;
+
+        public ModuleCheckBoxListener(String username, int moduleId, String moduleName, int credits) {
+            this.username = username;
+            this.moduleId = moduleId;
+            this.moduleName = moduleName;
+            this.credits = credits;
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                enrollModuleForStudent(username, moduleId, moduleName, credits);
+            } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                unenrollModuleForStudent(username, moduleId, moduleName, credits);
+            }
+        }
+    }
+
+
+    
+    private void enrollModuleForStudent(String username, int moduleId, String moduleName, int credits) {
+        // Insert the enrollment into the student_modules table
+        String enrollModuleQuery = "INSERT INTO student_modules (username, module_id) VALUES (?, ?)";
+        try (PreparedStatement enrollModuleStmt = connection.prepareStatement(enrollModuleQuery)) {
+            enrollModuleStmt.setString(1, username);
+            enrollModuleStmt.setInt(2, moduleId);
+            enrollModuleStmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "You have successfully enrolled in the module: " + moduleName);
+            updateEnrollmentStatus();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to enroll in the module: " + moduleName);
+        }
+    }
+
+    private void unenrollModuleForStudent(String username, int moduleId, String moduleName, int credits) {
+        // Delete the enrollment from the student_modules table
+        String unenrollModuleQuery = "DELETE FROM student_modules WHERE username = ? AND module_id = ?";
+        try (PreparedStatement unenrollModuleStmt = connection.prepareStatement(unenrollModuleQuery)) {
+            unenrollModuleStmt.setString(1, username);
+            unenrollModuleStmt.setInt(2, moduleId);
+            unenrollModuleStmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "You have successfully unenrolled from the module: " + moduleName);
+            updateEnrollmentStatus();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to unenroll from the module: " + moduleName);
+        }
+    }
+
+    
+    private int getCourseIdForStudent(String username) {
+        // Fetch the course_id for the logged-in student from the student table
+        String query = "SELECT course_id FROM student WHERE username = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("course_id");
+            } else {
+                return -1; // Return -1 if the course_id is not found for the given username
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1; // Return -1 if there's an error fetching the course_id
         }
     }
 
@@ -358,11 +378,12 @@ public class Enrollment {
             moduleBoxes[i].setSelected(false);
         }
     }
+    private void updateEnrollmentStatus() {
+        // This method should be responsible for updating the enrollment status based on the student's modules
+        // You can call this method after enrolling or unenrolling a module to refresh the enrollment status
+        loadEnrolledModules(username, getCourseIdForStudent(username));
+    }
 
     // Rest of the code for UI initialization and setup
     // ...
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Enrollment());
-    }
 }
