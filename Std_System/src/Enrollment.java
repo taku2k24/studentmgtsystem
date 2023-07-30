@@ -14,7 +14,7 @@ public class Enrollment {
     private JButton moduleBtn;
 
     private JLabel courseLabel;
-    private JLabel[] moduleLabels, credsLabels;
+    private JLabel[] moduleLabels, credsLabels, courseModuleLabel;
     private List<String> selectedModules;
     private Connection connection;
     private String selectedCourse;
@@ -57,10 +57,12 @@ public class Enrollment {
         TitledBorder titledBorder3 = BorderFactory.createTitledBorder("Module Enrollment");
         moduleEnrollment.setBorder(titledBorder3);
         moduleBoxes = new JCheckBox[6];
+        courseModuleLabel = new JLabel[6]; 
         for (int i = 0; i < 6; i++) {
             moduleBoxes[i] = new JCheckBox();
             moduleEnrollment.add(moduleBoxes[i]);
-            moduleEnrollment.add(new JLabel(""));
+            courseModuleLabel[i] = new JLabel("N/A - Placeholder");
+            moduleEnrollment.add(courseModuleLabel[i]);
         }
         JPanel buttonContainer = new JPanel(new FlowLayout());
         moduleBtn = new JButton("Enroll");
@@ -77,10 +79,12 @@ public class Enrollment {
                         if (!selectedModules.contains(selectedModule)) {
                             try {
                                 int moduleId = getModuleId(selectedModule);
-                                enrollModuleForStudent(username, moduleId, selectedModule, getCreditsForModule(selectedModule));
+                                enrollModuleForStudent(username, moduleId, selectedModule,
+                                        getCreditsForModule(selectedModule));
                             } catch (SQLException ex) {
                                 ex.printStackTrace();
-                                JOptionPane.showMessageDialog(null, "Failed to enroll in the module: " + selectedModule);
+                                JOptionPane.showMessageDialog(null,
+                                        "Failed to enroll in the module: " + selectedModule);
                             }
                         }
                     } else {
@@ -88,10 +92,12 @@ public class Enrollment {
                         if (selectedModules.contains(selectedModule)) {
                             try {
                                 int moduleId = getModuleId(selectedModule);
-                                unenrollModuleForStudent(username, moduleId, selectedModule, getCreditsForModule(selectedModule));
+                                unenrollModuleForStudent(username, moduleId, selectedModule,
+                                        getCreditsForModule(selectedModule));
                             } catch (SQLException ex) {
                                 ex.printStackTrace();
-                                JOptionPane.showMessageDialog(null, "Failed to unenroll from the module: " + selectedModule);
+                                JOptionPane.showMessageDialog(null,
+                                        "Failed to unenroll from the module: " + selectedModule);
                             }
                         }
                     }
@@ -111,23 +117,16 @@ public class Enrollment {
         connection = connectionManager.getConnection();
     }
 
-    private void loadModules(String selectedCourse) {
-        String query = "SELECT module_name FROM modules WHERE course_name = ?";
+    private void loadAllModules4Course(String courseName) {
+        String query = "SELECT module_name FROM modules WHERE course_name = ? ;";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, selectedCourse);
+            stmt.setString(1, courseName);
             ResultSet rs = stmt.executeQuery();
             int index = 0;
-            while (rs.next() && index < 6) {
-                moduleLabels[index].setText(rs.getString("module_name"));
-                credsLabels[index].setText("N/A");
+            while (rs.next() && index <= 6) {
                 moduleBoxes[index].setEnabled(true);
+                courseModuleLabel[index].setText(rs.getString("module_name"));
                 index++;
-            }
-            for (int i = index; i < 6; i++) {
-                moduleLabels[i].setText("N/A");
-                credsLabels[i].setText("N/A");
-                moduleBoxes[i].setEnabled(false);
-                moduleBoxes[i].setSelected(false);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -169,7 +168,7 @@ public class Enrollment {
             JOptionPane.showMessageDialog(null, "Failed to unenroll from the module: " + moduleName);
         }
     }
-    
+
     private List<String> loadEnrolledModules(String username, int courseId) {
         List<String> enrolledModules = new ArrayList<>();
 
@@ -185,6 +184,7 @@ public class Enrollment {
             while (rs.next()) {
                 enrolledModules.add(rs.getString("module_name"));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to load enrolled modules.");
@@ -192,7 +192,6 @@ public class Enrollment {
 
         return enrolledModules;
     }
-
 
     private void loadEnrollmentStatus() {
         int courseId = getCourseIdForStudent(username);
@@ -207,6 +206,9 @@ public class Enrollment {
         } else {
             JOptionPane.showMessageDialog(null, "Failed to retrieve the course ID for the student.");
         }
+
+        loadEnrolledModules(username, courseId);
+        loadAllModules4Course(selectedCourse);
     }
 
     private void updateEnrollmentStatusPanel() {
@@ -266,7 +268,6 @@ public class Enrollment {
         return null;
     }
 
-    
     private void enableModuleEnrollment(String username, String courseName) {
         String query = "SELECT module_id, module_name, credits FROM modules WHERE course_name = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -331,7 +332,9 @@ public class Enrollment {
     }
 
     public static void main(String[] args) {
-        String username = "jessica_miller567"; // Replace with the actual username
-        Enrollment enrollment = new Enrollment(username);
+        // String username = "jessica_miller567"; // Replace with the actual username
+        // Enrollment enrollment = new Enrollment(username);
+
+        new Enrollment("jessica_miller567");
     }
 }
