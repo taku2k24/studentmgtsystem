@@ -30,46 +30,103 @@ public class Enrollment {
 
     public void initializeUI() {
         frame = new JFrame("Enrollment");
-        frame.setLayout(new BorderLayout());
+        frame.setLayout(new GridBagLayout());
+        frame.getContentPane().setBackground(Color.WHITE); // Set the background color
 
-        statusEnrollment = new JPanel(new GridLayout(2, 2));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Add padding between components
+
+        // Initialize the moduleBoxes array
+        moduleBoxes = new JCheckBox[6];
+        
+     // Initialize the courseModuleLabel array
+        courseModuleLabel = new JLabel[6];
+        // Status Enrollment Panel
+        statusEnrollment = new JPanel(new GridBagLayout());
         TitledBorder titledBorder1 = BorderFactory.createTitledBorder("Enrollment Status");
+        titledBorder1.setTitleFont(new Font("Arial", Font.BOLD, 18)); // Change the font for the titled border
         statusEnrollment.setBorder(titledBorder1);
-        JPanel statusInnerDiv = new JPanel(new GridLayout(2, 2));
-        statusInnerDiv.add(new JLabel("Your course:"));
+        statusEnrollment.setBackground(Color.WHITE);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        statusEnrollment.add(new JLabel("Your course:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
         courseLabel = new JLabel("N/A");
-        statusInnerDiv.add(courseLabel);
-        statusEnrollment.add(statusInnerDiv);
-        JPanel modulePanel = new JPanel(new GridLayout(6, 2));
+        courseLabel.setFont(new Font("Arial", Font.PLAIN, 18)); // Change the font for the course label
+        statusEnrollment.add(courseLabel, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        JPanel modulePanel = new JPanel(new GridLayout(6, 2, 10, 5));
+        modulePanel.setBackground(Color.WHITE); // Set background color for the module panel
         moduleLabels = new JLabel[6];
         credsLabels = new JLabel[6];
         for (int i = 0; i < 6; i++) {
             modulePanel.add(new JLabel("Module " + (i + 1) + " - "));
             moduleLabels[i] = new JLabel("N/A");
+            moduleLabels[i].setFont(new Font("Arial", Font.PLAIN, 14)); // Change the font for module labels
             modulePanel.add(moduleLabels[i]);
             credsLabels[i] = new JLabel("N/A");
+            credsLabels[i].setFont(new Font("Arial", Font.PLAIN, 14)); // Change the font for credits labels
             modulePanel.add(credsLabels[i]);
         }
-        statusEnrollment.add(modulePanel);
-        frame.add(statusEnrollment, BorderLayout.NORTH);
+        statusEnrollment.add(modulePanel, gbc);
 
-        moduleEnrollment = new JPanel(new GridLayout(7, 2));
+        frame.add(statusEnrollment, gbc);
+
+        // Module Enrollment Panel
+        moduleEnrollment = new JPanel(new GridBagLayout());
         TitledBorder titledBorder3 = BorderFactory.createTitledBorder("Module Enrollment");
+        titledBorder3.setTitleFont(new Font("Arial", Font.BOLD, 18)); // Change the font for the titled border
         moduleEnrollment.setBorder(titledBorder3);
-        moduleBoxes = new JCheckBox[6];
-        courseModuleLabel = new JLabel[6]; 
+        moduleEnrollment.setBackground(Color.WHITE);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(20, 10, 10, 10); // Add padding for the module enrollment panel
         for (int i = 0; i < 6; i++) {
             moduleBoxes[i] = new JCheckBox();
-            moduleEnrollment.add(moduleBoxes[i]);
+            moduleEnrollment.add(moduleBoxes[i], gbc);
+
             courseModuleLabel[i] = new JLabel("N/A - Placeholder");
-            moduleEnrollment.add(courseModuleLabel[i]);
+            courseModuleLabel[i].setFont(new Font("Arial", Font.PLAIN, 14)); // Change the font for courseModuleLabel
+            gbc.gridx = 1;
+            gbc.anchor = GridBagConstraints.WEST;
+            moduleEnrollment.add(courseModuleLabel[i], gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy++;
         }
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(20, 10, 10, 10); // Add padding for the module enrollment panel
         JPanel buttonContainer = new JPanel(new FlowLayout());
         moduleBtn = new JButton("Enroll");
+        moduleBtn.setFont(new Font("Arial", Font.BOLD, 16)); // Change the font for the enroll button
         buttonContainer.add(moduleBtn);
-        moduleEnrollment.add(buttonContainer);
-        frame.add(moduleEnrollment, BorderLayout.CENTER);
+        moduleEnrollment.add(buttonContainer, gbc);
 
+        frame.add(moduleEnrollment, gbc);
+
+        // Resize checkboxes
+        Dimension checkBoxSize = new Dimension(18, 18);
+        for (JCheckBox moduleBox : moduleBoxes) {
+            moduleBox.setPreferredSize(checkBoxSize);
+            moduleBox.setMaximumSize(checkBoxSize);
+            moduleBox.setMinimumSize(checkBoxSize);
+        }
+        
         moduleBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -102,6 +159,32 @@ public class Enrollment {
                         }
                     }
                 }
+            }
+        });
+        
+        // Hover effect for module checkboxes
+        for (JCheckBox moduleBox : moduleBoxes) {
+            moduleBox.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    moduleBox.setBackground(Color.ORANGE);
+                }
+
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    moduleBox.setBackground(Color.WHITE);
+                }
+            });
+        }
+
+        // Hover effect for the enroll button
+        moduleBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                moduleBtn.setBackground(Color.ORANGE);
+                moduleBtn.setForeground(Color.WHITE);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                moduleBtn.setBackground(Color.WHITE);
+                moduleBtn.setForeground(Color.BLACK);
             }
         });
 
