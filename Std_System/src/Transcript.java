@@ -134,12 +134,13 @@ public class Transcript extends JFrame {
                 jl_5.setText(stdCC);
             }
 
-            String marksQuery = "SELECT modules.module_id, modules.module_name, marks.coursework_marks, marks.exam_marks " + 
-            "FROM student " + 
-            "INNER JOIN courses ON student.course_id = courses.course_id " +
-            "INNER JOIN marks ON student.student_id = marks.enrollment_id " + 
-            "INNER JOIN modules ON marks.module_id = modules.module_id " +
-            "WHERE student.username = ?;";
+            String marksQuery = "SELECT m.module_id, m.module_name, mk.coursework_marks, mk.exam_marks " + 
+                    "FROM student s " + 
+                    "INNER JOIN courses c ON s.course_id = c.course_id " +
+                    "INNER JOIN marks mk ON s.student_id = mk.enrollment_id " + 
+                    "INNER JOIN modules m ON mk.module_id = m.module_id " +
+                    "WHERE s.username = ?;";
+
 
             PreparedStatement marksStmt = con.prepareStatement(marksQuery);
             marksStmt.setString(1, username);

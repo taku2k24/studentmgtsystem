@@ -108,53 +108,75 @@ public class Timetable extends JFrame {
             DatabaseConnectionManager dbManager = DatabaseConnectionManager.getInstance();
             Connection con = dbManager.getConnection();
 
-            String query = "SELECT m.module_id, m.module_name, m.day, m.time_slot " +
-                    "FROM modules AS m " +
-                    "JOIN student_modules AS sm ON m.module_id = sm.module_id AND m.module_name = sm.module_name " +
-                    "WHERE sm.username = ?; ";
+            // Query to get the course name for the logged-in user based on their course_id
+            String courseNameQuery = "SELECT course_name FROM courses WHERE course_id IN (SELECT course_id FROM student WHERE username = ?)";
 
-            try (PreparedStatement preparedStatement = con.prepareStatement(query);) {
-                preparedStatement.setString(1, "jessica_miller567"); // Set the parameter for username
+            try (PreparedStatement courseNameStatement = con.prepareStatement(courseNameQuery);) {
+                courseNameStatement.setString(1, username);
 
-                // Execute the query and get the ResultSet
-                ResultSet rs = preparedStatement.executeQuery();
-                ResultSetMetaData rsmd = rs.getMetaData();
+                ResultSet courseNameResult = courseNameStatement.executeQuery();
+                if (courseNameResult.next()) {
+                    String courseName = courseNameResult.getString("course_name");
 
-                DefaultTableModel model = (DefaultTableModel) table.getModel();
-                model.setRowCount(0); // Clear the existing table data
+                    // Now that we have the course name, we can use it in the main query
+                    String query = "SELECT m.module_id, m.module_name, m.day, m.time_slot " +
+                            "FROM modules AS m " +
+                            "JOIN courses AS c ON m.course_name = c.course_name " +
+                            "JOIN student AS s ON c.course_id = s.course_id " +
+                            "WHERE s.username = ? AND c.course_name = ?";
 
-                int cols = rsmd.getColumnCount();
-                Object[] colName = { "Module ID", "Module Name", "Day", "Time" };
-                model.setColumnIdentifiers(colName);
+                    try (PreparedStatement preparedStatement = con.prepareStatement(query);) {
+                        preparedStatement.setString(1, username); // Use the class variable for username
+                        preparedStatement.setString(2, courseName); // Use the retrieved course name
 
-                String modId, modName, modDay, modTime;
-                while (rs.next()) {
-                    modId = rs.getString(1).toString();
-                    modName = rs.getString(2);
-                    modDay = rs.getString(3);
-                    modTime = (rs.getString(4).toString()).substring(0, 5);
-                    String[] row = { modId, modName, modDay, modTime };
-                    model.addRow(row);
+                        // Rest of the code remains the same...
+
+                        // Execute the query and get the ResultSet
+                        ResultSet rs = preparedStatement.executeQuery();
+                        ResultSetMetaData rsmd = rs.getMetaData();
+
+                        DefaultTableModel model = (DefaultTableModel) table.getModel();
+                        model.setRowCount(0); // Clear the existing table data
+
+                        int cols = rsmd.getColumnCount();
+                        Object[] colName = { "Module ID", "Module Name", "Day", "Time" };
+                        model.setColumnIdentifiers(colName);
+
+                        String modId, modName, modDay, modTime;
+                        while (rs.next()) {
+                            modId = rs.getString(1).toString();
+                            modName = rs.getString(2);
+                            modDay = rs.getString(3);
+                            modTime = (rs.getString(4).toString()).substring(0, 5);
+                            String[] row = { modId, modName, modDay, modTime };
+                            model.addRow(row);
+                        }
+
+                        // Close the PreparedStatement and the connection after use
+                        preparedStatement.close();
+                        dbManager.closeConnection();
+
+                        // Style the table
+                        table.setRowHeight(30);
+                        table.setFont(new Font("Arial", Font.PLAIN, 14));
+                        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+                        table.getTableHeader().setBackground(Color.ORANGE);
+                        table.getTableHeader().setForeground(Color.WHITE);
+                        table.setSelectionBackground(Color.LIGHT_GRAY);
+                        table.setSelectionForeground(Color.BLACK);
+                        table.setGridColor(Color.GRAY);
+                        table.setShowVerticalLines(false);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Course name not found for the logged-in user.");
                 }
 
-                // Close the PreparedStatement and the connection after use
-                preparedStatement.close();
-                dbManager.closeConnection();
-
-                // Style the table
-                table.setRowHeight(30);
-                table.setFont(new Font("Arial", Font.PLAIN, 14));
-                table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-                table.getTableHeader().setBackground(Color.ORANGE);
-                table.getTableHeader().setForeground(Color.WHITE);
-                table.setSelectionBackground(Color.LIGHT_GRAY);
-                table.setSelectionForeground(Color.BLACK);
-                table.setGridColor(Color.GRAY);
-                table.setShowVerticalLines(false);
-
+                // Close the ResultSet and the PreparedStatement for course name query
+                courseNameResult.close();
+                courseNameStatement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Failed to load timetable data.");
+                JOptionPane.showMessageDialog(null, "Failed to retrieve course name for the logged-in user.");
             }
         } catch (Exception e) {
             e.printStackTrace();
