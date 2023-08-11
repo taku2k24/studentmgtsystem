@@ -1,15 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.SQLException;
 
 public class Dashboard extends JFrame {
     private String username;
-
     private Color orangeShade = new Color(255, 140, 0); 
     private Color greyShade = new Color(100, 100, 100); 
     private Color lightorangeShade = new Color(255, 237, 227); // For bg color
-
     private Color whiteShade = Color.WHITE;
     private int i = 0;
 
@@ -20,6 +17,10 @@ public class Dashboard extends JFrame {
     }
 
     private void initializeUI(String username) {
+        //ICON
+        ImageIcon img = new ImageIcon("orange_icon.png");
+        setIconImage(img.getImage());
+        
         // Create the content panel with a grey background
         JPanel contentPanel = new JPanel();
         contentPanel.setBackground(lightorangeShade);
@@ -36,10 +37,15 @@ public class Dashboard extends JFrame {
         // Creating the menu panel with buttons
         JButton[] menuBtn = new JButton[5];
         menuBtn[0] = new JButton("Profile");
+        menuBtn[0].setToolTipText("View profile");
         menuBtn[1] = new JButton("Modules");
+        menuBtn[1].setToolTipText("Enroll or view modules");
         menuBtn[2] = new JButton("Payment");
+        menuBtn[2].setToolTipText("Pay fees");
         menuBtn[3] = new JButton("Timetable");
+        menuBtn[3].setToolTipText("View timetable");
         menuBtn[4] = new JButton("Transcript");
+        menuBtn[4].setToolTipText("View transcript");
 
         //Adding the buttons to content panel
         JPanel[] btnContainer = new JPanel[5];
@@ -156,28 +162,20 @@ public class Dashboard extends JFrame {
         Profile profileFrame = new Profile(username);
         // profile.setVisible(true);
     }
-
     private void openEnrollWindow() {
         Enrollment enrollFrame = new Enrollment(username);
         // profile.setVisible(true);
     }
-
     private void openPayWindow() {
         Payment payFrame = new Payment(username);
         // profile.setVisible(true);
     }
-
     private void openTimetableWindow() {
         Timetable timetableFrame = new Timetable(username);
         // profile.setVisible(true);
     }
-
     private void openTranscriptWindow() {
         Transcript transcriptFrame = new Transcript(username);
         // profile.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new Dashboard("jessica_miller567");
     }
 }

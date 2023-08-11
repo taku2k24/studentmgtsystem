@@ -9,7 +9,6 @@ public class Login extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private DatabaseConnectionManager connectionManager;
-
     private Color orangeShade = new Color(255, 140, 0); // Shade of orange
     private Color greyShade = new Color(100, 100, 100); // Shade of grey
     private Color lightorangeShade = new Color(255, 237, 227); // For bg color
@@ -22,6 +21,10 @@ public class Login extends JFrame {
     }
 
     private void initializeUI() {
+        //ICON
+        ImageIcon img = new ImageIcon("orange_icon.png");
+        setIconImage(img.getImage());
+        
         // Create and arrange UI components
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(lightorangeShade);
@@ -84,7 +87,6 @@ public class Login extends JFrame {
         });
         panel.add(loginButton, constraints);
 
-
         add(panel, BorderLayout.CENTER);
 
         // Hover effect for the buttons
@@ -104,15 +106,13 @@ public class Login extends JFrame {
         setSize(600, 600);
         setLocationRelativeTo(null);
         setVisible(true);
-
     }
 
     private void login() {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
-        // Insert the student details into the database using the
-        // DatabaseConnectionManager
+        // Insert the student details into the database using the DatabaseConnectionManager
         try (Connection connection = connectionManager.getConnection()) {
             String query = "SELECT userType FROM users WHERE username=? AND password=?";
             PreparedStatement statement = connection.prepareStatement(query);
@@ -123,7 +123,7 @@ public class Login extends JFrame {
             if (resultSet.next()) {
                 String userType = resultSet.getString("userType");
                 if (userType.equals("student")) {
-                    // If the user is a student, open the StudentDashboard
+                    // If the user is a student, open the Dashboard
                     Dashboard dashboard = new Dashboard(username);
                     dashboard.setVisible(true);
                     dispose(); // Close the login frame
@@ -138,9 +138,5 @@ public class Login extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args){
-        new Login();
     }
 }

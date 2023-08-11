@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,6 +34,10 @@ public class Transcript extends JFrame {
     private JScrollPane sp;
     private JLabel jl_1, jl_2, jl_3, jl_4, jl_5;
 
+    private Color orangeShade = new Color(255, 140, 0); 
+    private Color greyShade = new Color(100, 100, 100); 
+    private Color lightorangeShade = new Color(255, 237, 227); // For bg color
+
     private String username;
 
     public Transcript(String username) {
@@ -40,11 +46,18 @@ public class Transcript extends JFrame {
     }
 
     public void initializeUI() {
+        //ICON
+        ImageIcon img = new ImageIcon("orange_icon.png");
+        setIconImage(img.getImage());
+        
         setTitle("Transcript");
         setLayout((LayoutManager) new BorderLayout());
 
         JButton btnDisplay = new JButton("View Transcript");
         btnDisplay.setFont(new Font("Arial", Font.BOLD, 11));
+        btnDisplay.setBackground(orangeShade);
+        btnDisplay.setForeground(Color.WHITE);
+        btnDisplay.setFocusPainted(false); // Remove the focus border
 
         table = new JTable();
         table.setBorder(null);
@@ -55,12 +68,38 @@ public class Transcript extends JFrame {
                 Display();
             }
         });
+        btnDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnDisplay.setBackground(Color.WHITE);
+                btnDisplay.setForeground(orangeShade);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnDisplay.setBackground(orangeShade);
+                btnDisplay.setForeground(Color.WHITE);
+            }
+        });
 
         btnClear = new JButton("Clear");
         btnClear.setFont(new Font("Arial", Font.BOLD, 11));
+        btnClear.setBackground(Color.GRAY);
+        btnClear.setForeground(Color.WHITE);
+        btnClear.setFocusPainted(false); // Remove the focus border
         btnClear.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Clear();
+            }
+        });
+
+        btnClear.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnClear.setBackground(Color.WHITE);
+                btnClear.setForeground(Color.GRAY);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnClear.setBackground(Color.GRAY);
+                btnClear.setForeground(Color.WHITE);
             }
         });
 
@@ -72,18 +111,23 @@ public class Transcript extends JFrame {
         sp = new JScrollPane(table);
 
         jl_1 = new JLabel();
+        jl_1.setFont(new Font("Arial", Font.BOLD, 14));
         jl_2 = new JLabel();
+        jl_2.setFont(new Font("Arial", Font.BOLD, 14));
         jl_3 = new JLabel();
+        jl_3.setFont(new Font("Arial", Font.BOLD, 14));
         jl_4 = new JLabel();
+        jl_4.setFont(new Font("Arial", Font.BOLD, 14));
         jl_5 = new JLabel();
+        jl_5.setFont(new Font("Arial", Font.BOLD, 14));
 
-        jl_1.setText("Student ID: ");
-        jl_2.setText("First Name: ");
-        jl_3.setText("Last Name: ");
+        jl_1.setText("Student ID : ");
+        jl_2.setText("First Name : ");
+        jl_3.setText("Last Name  : ");
         jl_4.setText("Course Name: ");
         jl_5.setText("Course Code: ");
 
-        jp_label = new JPanel(new GridLayout(2, 3));
+        jp_label = new JPanel(new GridLayout(5, 1));
         jp_label.add(jl_1);
         jp_label.add(jl_2);
         jp_label.add(jl_3);
@@ -121,11 +165,11 @@ public class Transcript extends JFrame {
             ResultSet studentRs = studentStmt.executeQuery();
 
             if (studentRs.next()) {
-                String stdID = "Student ID: " + studentRs.getString(1);
-                String stdF = "First Name: " + studentRs.getString(2);
-                String stdL = "Last Name: " + studentRs.getString(3);
-                String stdCN = "Course Name: " + studentRs.getString(4);
-                String stdCC = "Course Code: " + studentRs.getString(5);
+                String stdID = "Student ID     : " + studentRs.getString(1);
+                String stdF = "First Name     : " + studentRs.getString(2);
+                String stdL = "Last Name     : " + studentRs.getString(3);
+                String stdCN = "Course Name : " + studentRs.getString(4);
+                String stdCC = "Course Code  : " + studentRs.getString(5);
 
                 jl_1.setText(stdID);
                 jl_2.setText(stdF);
@@ -171,6 +215,17 @@ public class Transcript extends JFrame {
             rs2.close();
             marksStmt.close();
             connectionManager.closeConnection(); // Close the connection
+
+            // Style the table
+            table.setRowHeight(30);
+            table.setFont(new Font("Arial", Font.PLAIN, 14));
+            table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+            table.getTableHeader().setBackground(orangeShade);
+            table.getTableHeader().setForeground(Color.WHITE);
+            table.setSelectionBackground(Color.LIGHT_GRAY);
+            table.setSelectionForeground(Color.BLACK);
+            table.setGridColor(Color.GRAY);
+            table.setShowVerticalLines(false);
 
         } catch (SQLException e1) {
             e1.printStackTrace();

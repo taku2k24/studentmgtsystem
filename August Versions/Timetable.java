@@ -17,6 +17,10 @@ public class Timetable extends JFrame {
     private JButton btnDisplay, btnClear;
     private JScrollPane sp;
 
+    private Color orangeShade = new Color(255, 140, 0); 
+    private Color greyShade = new Color(100, 100, 100); 
+    private Color lightorangeShade = new Color(255, 237, 227); // For bg color
+
     private String username;
 
     public Timetable(String username) {
@@ -25,12 +29,16 @@ public class Timetable extends JFrame {
     }
 
     public void initializeUI() {
+        //ICON
+        ImageIcon img = new ImageIcon("orange_icon.png");
+        setIconImage(img.getImage());
+        
         setTitle("TimeTable");
         getContentPane().setLayout(new BorderLayout());
 
         btnDisplay = new JButton("View Timetable");
         btnDisplay.setFont(new Font("Arial", Font.BOLD, 11));
-        btnDisplay.setBackground(Color.ORANGE);
+        btnDisplay.setBackground(orangeShade);
         btnDisplay.setForeground(Color.WHITE);
         btnDisplay.setFocusPainted(false); // Remove the focus border
 
@@ -76,15 +84,16 @@ public class Timetable extends JFrame {
         btnDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnDisplay.setBackground(Color.WHITE);
-                btnDisplay.setForeground(Color.ORANGE);
+                btnDisplay.setForeground(orangeShade);
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnDisplay.setBackground(Color.ORANGE);
+                btnDisplay.setBackground(orangeShade);
                 btnDisplay.setForeground(Color.WHITE);
             }
         });
 
+        // Hover effects
         btnClear.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnClear.setBackground(Color.WHITE);
@@ -98,7 +107,8 @@ public class Timetable extends JFrame {
         });
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 450, 300);
+        setSize(800, 500);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -160,7 +170,7 @@ public class Timetable extends JFrame {
                         table.setRowHeight(30);
                         table.setFont(new Font("Arial", Font.PLAIN, 14));
                         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-                        table.getTableHeader().setBackground(Color.ORANGE);
+                        table.getTableHeader().setBackground(orangeShade);
                         table.getTableHeader().setForeground(Color.WHITE);
                         table.setSelectionBackground(Color.LIGHT_GRAY);
                         table.setSelectionForeground(Color.BLACK);

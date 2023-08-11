@@ -20,6 +20,10 @@ public class Enrollment {
     private String selectedCourse;
     private String username;
 
+    private Color orangeShade = new Color(255, 140, 0); 
+    private Color greyShade = new Color(100, 100, 100); 
+    private Color lightorangeShade = new Color(255, 237, 227); // For bg color
+
     public Enrollment(String username) {
         this.username = username;
         initializeDatabaseConnection();
@@ -32,7 +36,11 @@ public class Enrollment {
     public void initializeUI() {
         frame = new JFrame("Enrollment");
         frame.setLayout(new GridBagLayout());
-        frame.getContentPane().setBackground(Color.WHITE); // Set the background color
+        frame.getContentPane().setBackground(lightorangeShade); // Set the background color
+
+        //ICON
+        ImageIcon img = new ImageIcon("orange_icon.png");
+        frame.setIconImage(img.getImage());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10); // Add padding between components
@@ -44,15 +52,18 @@ public class Enrollment {
         courseModuleLabel = new JLabel[6];
         // Status Enrollment Panel
         statusEnrollment = new JPanel(new GridBagLayout());
+        statusEnrollment.setBackground(lightorangeShade);
         TitledBorder titledBorder1 = BorderFactory.createTitledBorder("Enrollment Status");
+        titledBorder1.setTitleColor(orangeShade);
         titledBorder1.setTitleFont(new Font("Arial", Font.BOLD, 18)); // Change the font for the titled border
         statusEnrollment.setBorder(titledBorder1);
-        statusEnrollment.setBackground(Color.WHITE);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        statusEnrollment.add(new JLabel("Your course:"), gbc);
+        JLabel c = new JLabel("Your course:");
+        c.setFont(new Font("Arial", Font.PLAIN, 14));
+        statusEnrollment.add(c, gbc);
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -65,7 +76,7 @@ public class Enrollment {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         JPanel modulePanel = new JPanel(new GridLayout(6, 2, 10, 5));
-        modulePanel.setBackground(Color.WHITE); // Set background color for the module panel
+        modulePanel.setBackground(lightorangeShade);
         moduleLabels = new JLabel[6];
         credsLabels = new JLabel[6];
         for (int i = 0; i < 6; i++) {
@@ -83,10 +94,11 @@ public class Enrollment {
 
         // Module Enrollment Panel
         moduleEnrollment = new JPanel(new GridBagLayout());
+        moduleEnrollment.setBackground(lightorangeShade);
         TitledBorder titledBorder3 = BorderFactory.createTitledBorder("Module Enrollment");
+        titledBorder3.setTitleColor(orangeShade);
         titledBorder3.setTitleFont(new Font("Arial", Font.BOLD, 18)); // Change the font for the titled border
         moduleEnrollment.setBorder(titledBorder3);
-        moduleEnrollment.setBackground(Color.WHITE);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -116,6 +128,7 @@ public class Enrollment {
         gbc.insets = new Insets(20, 10, 10, 10); // Add padding for the module enrollment panel
         JPanel buttonContainer = new JPanel(new FlowLayout());
         moduleBtn = new JButton("Enroll");
+        moduleBtn.setBackground(Color.WHITE);
         moduleBtn.setFont(new Font("Arial", Font.BOLD, 16)); // Change the font for the enroll button
         buttonContainer.add(moduleBtn);
         moduleEnrollment.add(buttonContainer, gbc);
@@ -137,7 +150,7 @@ public class Enrollment {
                     if (moduleBoxes[i].isSelected()) {
                         String selectedModule = courseModuleLabel[i].getText();
                         enrollModule(username, selectedModule);
-                    } else if (!(courseModuleLabel[i].getText().equals("N/A - Placeholder"))) {
+                    } else if(!(courseModuleLabel[i].getText().equals("N/A - Placeholder"))){
                         String unSelectedModule = courseModuleLabel[i].getText();
                         unenrollModule(username, unSelectedModule);
                     }
@@ -311,18 +324,6 @@ public class Enrollment {
                 int moduleId = rs.getInt("module_id");
                 String moduleName = rs.getString("module_name");
                 int credits = rs.getInt("credits");
-                // String fetchCredits = "SELECT credits " +
-                // "FROM modules " +
-                // "WHERE module_id = ? ;";
-                // try (PreparedStatement stmt2 = connection.prepareStatement(fetchCredits)) {
-                // stmt2.setString(1, String.valueOf(moduleId));
-                // ResultSet rs2 = stmt2.executeQuery();
-                // rs2.next();
-                // credits = rs2.getInt("credits");
-                // } catch (SQLException e) {
-                // e.printStackTrace();
-                // JOptionPane.showMessageDialog(null, "Failed to load module credits.");
-                // }
 
                 moduleLabels[moduleIndex].setText(moduleName);
                 credsLabels[moduleIndex].setText(credits + " credits");
@@ -367,6 +368,7 @@ public class Enrollment {
             JOptionPane.showMessageDialog(null, "Failed to load modules for the selected course.");
         }
     }
+
 
     public static void main(String[] args) {
         new Enrollment("jessica_miller567");

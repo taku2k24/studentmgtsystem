@@ -18,6 +18,10 @@ public class Payment {
     private JLabel paymentstatusLabel, adminStatusLabel, tuitionStatusLabel, otherStatusLabel;
     private JLabel totalFee;
 
+    private Color orangeShade = new Color(255, 140, 0); 
+    private Color greyShade = new Color(100, 100, 100); 
+    private Color lightorangeShade = new Color(255, 237, 227); // For bg color
+
     private int userID;
     private PaymentManager paymentManager;
     private JComboBox<String> Other;
@@ -30,34 +34,54 @@ public class Payment {
     }
 
     public void initializeUI(String username) {
+
         // PLACEHOLDERS
         paymentstatusLabel = new JLabel("N/A");
+        paymentstatusLabel.setFont(new Font("Arial", Font.BOLD, 16));
         adminStatusLabel = new JLabel("N/A");
+        adminStatusLabel.setFont(new Font("Arial", Font.BOLD, 16));
         tuitionStatusLabel = new JLabel("N/A");
+        tuitionStatusLabel.setFont(new Font("Arial", Font.BOLD, 16));
         otherStatusLabel = new JLabel("N/A");
+        otherStatusLabel.setFont(new Font("Arial", Font.BOLD, 16));
         totalFee = new JLabel("Rs 0");
+        totalFee.setFont(new Font("Arial", Font.BOLD, 16));
 
         frame = new JFrame("Payment");
         frame.setLayout(new GridLayout(2, 1));
 
+        //ICON
+        ImageIcon img = new ImageIcon("orange_icon.png");
+        frame.setIconImage(img.getImage());
+
         // The Status Panel found in the first half of the page
         statusPanel = new JPanel(new GridLayout(5, 2)); // Reduce the grid layout rows since "Other" is in the JComboBox
-        statusPanel.add(new JLabel("Payment Status:"));
+        JLabel p = new JLabel("Payment Status:");
+        p.setFont(new Font("Arial", Font.PLAIN, 16));
+        statusPanel.add(p);
         statusPanel.add(paymentstatusLabel);
-        statusPanel.add(new JLabel("Admin fees:"));
+        JLabel a = new JLabel("Admin fees:");
+        a.setFont(new Font("Arial", Font.PLAIN, 16));
+        statusPanel.add(a);
         statusPanel.add(adminStatusLabel);
-        statusPanel.add(new JLabel("Tuition fees:"));
+        JLabel t = new JLabel("Tuition fees:");
+        statusPanel.add(t);
+        t.setFont(new Font("Arial", Font.PLAIN, 16));
         statusPanel.add(tuitionStatusLabel);
-        statusPanel.add(new JLabel("Other:"));
+        JLabel o = new JLabel("Other:");
+        o.setFont(new Font("Arial", Font.PLAIN, 16));
+        statusPanel.add(o);
         statusPanel.add(otherStatusLabel);
         JPanel innerStatusPanel = new JPanel(new FlowLayout());
         payNowBtn = new JButton("Pay Now");
+        payNowBtn.setFont(new Font("Arial", Font.PLAIN, 12));
         innerStatusPanel.add(payNowBtn);
         statusPanel.add(innerStatusPanel);
         frame.add(statusPanel);
      // ... (previous code remains the same)
 
-         viewStatusBtn = new JButton("View Current Status");
+        viewStatusBtn = new JButton("View Current Status");
+        viewStatusBtn.setFont(new Font("Arial", Font.PLAIN, 12));
         innerStatusPanel.add(viewStatusBtn);
         statusPanel.add(innerStatusPanel);
         frame.add(statusPanel);
@@ -71,19 +95,25 @@ public class Payment {
 
         // Contains stuff being paid for
         subPayPanel1 = new JPanel(new GridLayout(5, 1)); // Decrease the grid layout rows since "Other" is in the JComboBox
-        subPayPanel1.add(new JLabel("1. Select modules being paid for: "));
+        JLabel s1 = new JLabel("1. Select modules being paid for: ");
+        s1.setFont(new Font("Arial", Font.BOLD, 16));
+        s1.setForeground(orangeShade);
+        subPayPanel1.add(s1);
         JPanel innerSub1Panel1 = new JPanel(new GridLayout(1, 2)); // Admin
         adminfBOX = new JCheckBox("Admin fees");
+        adminfBOX.setFont(new Font("Arial", Font.PLAIN, 14));
         innerSub1Panel1.add(adminfBOX);
         subPayPanel1.add(innerSub1Panel1);
 
         JPanel innerSub1Panel2 = new JPanel(new GridLayout(1, 2)); // Tuition
         tuitionfBOX = new JCheckBox("Tuition fees");
+        tuitionfBOX.setFont(new Font("Arial", Font.PLAIN, 14));
         innerSub1Panel2.add(tuitionfBOX);
         subPayPanel1.add(innerSub1Panel2);
 
         JPanel innerSub1Panel3 = new JPanel(new FlowLayout()); // Other options (dropdown)
         JLabel otherLabel = new JLabel("Other:");
+        otherLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         String[] otherOptions = {"Module Registration", "Metro Card", "Bus Pass"};
         Other = new JComboBox<>(otherOptions);
         innerSub1Panel3.add(otherLabel);
@@ -92,6 +122,7 @@ public class Payment {
 
         JPanel innerSub1Panel4 = new JPanel(new FlowLayout()); // Total
         totalBtn = new JButton("Calculate Total");
+        totalBtn.setFont(new Font("Arial", Font.PLAIN, 12));
         innerSub1Panel4.add(totalBtn);
         innerSub1Panel4.add(totalFee);
         subPayPanel1.add(innerSub1Panel4);
@@ -99,11 +130,17 @@ public class Payment {
 
         // Contains the payment methods
         subPayPanel2 = new JPanel(new GridLayout(5, 1));
-        subPayPanel2.add(new JLabel("2. Select payment method:"));
+        JLabel s2 = new JLabel("2. Select payment method:");
+        s2.setFont(new Font("Arial", Font.BOLD, 16));
+        s2.setForeground(orangeShade);
+        subPayPanel2.add(s2);
         JPanel innerSub2Panel1 = new JPanel(new FlowLayout());
         cashRBTN = new JRadioButton("Cash");
+        cashRBTN.setFont(new Font("Arial", Font.PLAIN, 14));
         creditRBTN = new JRadioButton("Credit");
+        creditRBTN.setFont(new Font("Arial", Font.PLAIN, 14));
         debitRBTN = new JRadioButton("Debit");
+        debitRBTN.setFont(new Font("Arial", Font.PLAIN, 14));
         ButtonGroup rBTNgroup = new ButtonGroup(); // Adding Radio buttons to a group
         rBTNgroup.add(cashRBTN);
         rBTNgroup.add(creditRBTN);
@@ -113,7 +150,8 @@ public class Payment {
         innerSub2Panel1.add(debitRBTN);
         subPayPanel2.add(innerSub2Panel1);
         JPanel innerSub2Panel2 = new JPanel(new FlowLayout());
-        confirmPaymentBtn = new JButton("Confirm");
+        confirmPaymentBtn = new JButton("Confirm Payment");
+        confirmPaymentBtn.setFont(new Font("Arial", Font.PLAIN, 12));
         innerSub2Panel2.add(confirmPaymentBtn);
         subPayPanel2.add(innerSub2Panel2);
         paymentPanel.add(subPayPanel2);
@@ -122,12 +160,21 @@ public class Payment {
         subPayPanel1.setBorder(blackline);
         subPayPanel2.setBorder(blackline);
 
+        viewStatusBtn.setBackground(Color.WHITE);
+        payNowBtn.setBackground(Color.WHITE);
+        totalBtn.setBackground(Color.WHITE);
+        confirmPaymentBtn.setBackground(Color.WHITE);
+        innerStatusPanel.setBackground(lightorangeShade);
+        frame.setBackground(lightorangeShade);
+        statusPanel.setBackground(lightorangeShade);
+        paymentPanel.setBackground(lightorangeShade);
+
+
         paymentPanel.setVisible(false);
 
-        frame.pack();
-        frame.setLocationRelativeTo(null);
         frame.setSize(800, 700);
         frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         
@@ -219,6 +266,52 @@ public class Payment {
             @Override
             public void actionPerformed(ActionEvent e) {
                 viewCurrentStatus();
+            }
+        });
+
+        // Hover effects
+        payNowBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                payNowBtn.setBackground(orangeShade);
+                payNowBtn.setForeground(Color.WHITE);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                payNowBtn.setBackground(Color.WHITE);
+                payNowBtn.setForeground(Color.BLACK);
+            }
+        });
+        viewStatusBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewStatusBtn.setBackground(orangeShade);
+                viewStatusBtn.setForeground(Color.WHITE);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewStatusBtn.setBackground(Color.WHITE);
+               viewStatusBtn.setForeground(Color.BLACK);
+            }
+        });
+        confirmPaymentBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                confirmPaymentBtn.setBackground(orangeShade);
+                confirmPaymentBtn.setForeground(Color.WHITE);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                confirmPaymentBtn.setBackground(Color.WHITE);
+               confirmPaymentBtn.setForeground(Color.BLACK);
+            }
+        });
+        totalBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                totalBtn.setBackground(orangeShade);
+                totalBtn.setForeground(Color.WHITE);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                totalBtn.setBackground(Color.WHITE);
+                totalBtn.setForeground(Color.BLACK);
             }
         });
 
@@ -367,5 +460,9 @@ public class Payment {
         }
 
         return flatFee;
+    }
+
+    public static void main(String[] args){
+        new Payment("jessical_miller567");
     }
 }
